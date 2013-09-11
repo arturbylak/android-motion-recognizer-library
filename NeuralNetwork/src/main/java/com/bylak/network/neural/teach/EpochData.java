@@ -10,15 +10,23 @@ import java.util.List;
  * Time: 15:04
  * To change this template use File | Settings | File Templates.
  */
-public final class EpokData {
+public final class EpochData {
     private final List<TeachData> teachData;
 
-    public EpokData(final List<TeachData> teachData) {
+    public EpochData(final List<TeachData> teachData) {
         this.teachData = teachData;
     }
 
     public List<TeachData> getTeachData() {
         return teachData;
+    }
+
+    public int getSize() {
+        return teachData.size();
+    }
+
+    public TeachData getElement(int elementIndex) {
+        return teachData.get(elementIndex);
     }
 
     public static class Builder {
@@ -34,8 +42,8 @@ public final class EpokData {
             return this;
         }
 
-        public EpokData build() {
-            return new EpokData(teachData);
+        public EpochData build() {
+            return new EpochData(teachData);
         }
     }
 }
