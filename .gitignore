@@ -18,3 +18,9 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+
+/.idea/*
+*/.idea/*
+/NeuralNetwork/target/*.jar
+*/target/*
+*.iml
