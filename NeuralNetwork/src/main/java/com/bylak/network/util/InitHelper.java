@@ -1,10 +1,6 @@
 package com.bylak.network.util;
 
 import com.bylak.network.exception.AggregatedException;
-import com.sun.javafx.binding.StringFormatter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,14 +12,14 @@ import java.util.List;
 public final class InitHelper {
     private static final String ERROR_MESSAGE = "Argument %s can not be null";
 
-    private InitHelper(){};
+    private InitHelper() {
+    }
 
     public static void checkNullValues(Object... objects) throws AggregatedException {
-        List<Exception> exceptions = new ArrayList<Exception>();
         AggregatedException.Builder exceptionBuilder = new AggregatedException.Builder();
 
-        for(Object object : objects){
-            if(object==null) {
+        for (Object object : objects) {
+            if (object == null) {
                 String message = String.format(ERROR_MESSAGE, "test");
                 exceptionBuilder.add(new IllegalArgumentException(message));
             }

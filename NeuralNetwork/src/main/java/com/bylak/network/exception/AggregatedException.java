@@ -10,27 +10,31 @@ import java.util.List;
  * Time: 12:26
  * To change this template use File | Settings | File Templates.
  */
-public final class AggregatedException extends Exception{
+public final class AggregatedException extends Exception {
     private List<Exception> exceptions;
 
-    private  AggregatedException(final List<Exception> exceptions){
+    public AggregatedException(final List<Exception> exceptions) {
         this.exceptions = exceptions;
     }
 
-    public static final class Builder{
+    public List<Exception> getExceptions() {
+        return new ArrayList<Exception>(exceptions);
+    }
+
+    public static final class Builder {
         private List<Exception> exceptions;
 
-        public  Builder(){
-           this.exceptions = new ArrayList<Exception>();
+        public Builder() {
+            this.exceptions = new ArrayList<Exception>();
         }
 
-        public Builder add(Exception ex){
+        public Builder add(Exception ex) {
             this.exceptions.add(ex);
             return this;
         }
 
-        public AggregatedException build(){
-             return new AggregatedException(this.exceptions);
+        public AggregatedException build() {
+            return new AggregatedException(this.exceptions);
         }
     }
 }
