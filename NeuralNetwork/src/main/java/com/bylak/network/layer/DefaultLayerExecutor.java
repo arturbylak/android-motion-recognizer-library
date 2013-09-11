@@ -9,7 +9,7 @@ import java.util.List;
  * Time: 23:00
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultLayerExecutor implements LayerExecutor {
+public final class DefaultLayerExecutor implements LayerExecutor {
     @Override
     public void execute(final List<Layer> layers) {
         for (int i = 0; i < layers.size() - 1; i++) {

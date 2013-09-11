@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 09:19
  * To change this template use File | Settings | File Templates.
  */
-public class ArrayListBuilder<T> {
+public final class ArrayListBuilder<T> {
     private List<T> list;
 
     public ArrayListBuilder() {

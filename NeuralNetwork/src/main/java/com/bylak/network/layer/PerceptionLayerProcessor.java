@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 22:45
  * To change this template use File | Settings | File Templates.
  */
-public class PerceptionLayerProcessor implements LayerProcessor {
+public final class PerceptionLayerProcessor implements LayerProcessor {
     @Override
     public void processLayer(Layer firstLayer, Layer secondLayer) {
         RealMatrix currentValues = firstLayer.createNeuronsValuesMatrix();

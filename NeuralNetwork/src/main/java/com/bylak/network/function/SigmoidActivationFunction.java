@@ -7,7 +7,7 @@ package com.bylak.network.function;
  * Time: 20:39
  * To change this template use File | Settings | File Templates.
  */
-public class SigmoidActivationFunction implements ActivationFunction {
+public final class SigmoidActivationFunction implements ActivationFunction {
     @Override
     public double calculate(double xValue) {
         return 1.0 / (1 + Math.exp(-1.0 * xValue));
