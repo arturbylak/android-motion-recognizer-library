@@ -4,7 +4,9 @@ import com.bylak.network.layer.DefaultLayerExecutor;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.layer.LayerExecutor;
 import com.bylak.network.neural.teach.BackPropagationAlgorithm;
+import com.bylak.network.neural.teach.EpochData;
 import com.bylak.network.neural.teach.NeutralNetworkTeachingAlgorithm;
+import com.bylak.network.neural.teach.TeachConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +19,15 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class NeuralNetwork {
-    private final List<Layer> layers;
     private double[] output;
     private LayerExecutor layerExecutor;
     private NeutralNetworkTeachingAlgorithm teachingAlgorithm;
+    private final List<Layer> layers;
 
     public NeuralNetwork() {
         this.layers = new ArrayList<Layer>();
         this.layerExecutor = new DefaultLayerExecutor();
-        this.teachingAlgorithm = new BackPropagationAlgorithm(null, 0.001d, 500);
+        this.teachingAlgorithm = new BackPropagationAlgorithm();
     }
 
     public void addLayer(final Layer layer) {
@@ -42,7 +44,7 @@ public final class NeuralNetwork {
         return this.output;
     }
 
-    public void teach() {
-        teachingAlgorithm.teach(layers);
+    public void teach(final EpochData epochData, final TeachConfiguration teachConfiguration) {
+        teachingAlgorithm.teach(layers, epochData, teachConfiguration);
     }
 }

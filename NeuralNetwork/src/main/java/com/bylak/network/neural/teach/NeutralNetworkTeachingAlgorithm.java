@@ -12,5 +12,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface NeutralNetworkTeachingAlgorithm {
-    void teach(final List<Layer> layers);
+    void teach(final List<Layer> layers, final EpochData epochData, final TeachConfiguration teachConfiguration);
 }

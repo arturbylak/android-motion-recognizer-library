@@ -12,30 +12,19 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlgorithm {
-    private final EpochData epochData;
-    private int epochCount;
-    private double maxErrorValue;
-
-    public BackPropagationAlgorithm(final EpochData epochData, double maxErrorValue, int epochCount) {
-        this.epochData = epochData;
-        this.maxErrorValue = maxErrorValue;
-        this.epochCount = epochCount;
-    }
 
     @Override
-    public void teach(final List<Layer> layers) {
+    public void teach(final List<Layer> layers, final EpochData epochData, final TeachConfiguration teachConfiguration) {
         int teachDataCount = epochData.getSize();
+        int epochCount = teachConfiguration.getEpochCount();
+
         for (int i = 0; i < epochCount; i++) {
             for (int j = 0; j < teachDataCount; j++) {
-                TeachData singleTeachData = getRandomTeachData();
+                TeachData singleTeachData = epochData.getElement(0);
 
                 propagate(singleTeachData, layers);
             }
         }
-    }
-
-    private TeachData getRandomTeachData() {
-        return epochData.getElement(0);
     }
 
     private void propagate(final TeachData singleTeachData, final List<Layer> layers) {
