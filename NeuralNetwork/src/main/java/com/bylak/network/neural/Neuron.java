@@ -14,6 +14,7 @@ import org.apache.commons.math.linear.RealMatrix;
 public final class Neuron {
     private RealMatrix wags;
     private double neuronValue;
+    private double inputsValue;
     private final ActivationFunction activationFunction;
 
     public Neuron(double[] wags, double neuronValue, final ActivationFunction activationFunction) {
@@ -26,10 +27,10 @@ public final class Neuron {
         return this.neuronValue;
     }
 
-    public void calculateNewNeuronValue(RealMatrix inputs) {
+    public void simulate(RealMatrix inputs) {
         RealMatrix multiplied = inputs.multiply(wags);
-        double newNeuronValue = sumFirstRow(multiplied);
-        neuronValue = activateFunctionValue(newNeuronValue);
+        inputsValue = sumFirstRow(multiplied);
+        neuronValue = activationFunction.value(inputsValue);
     }
 
     private double sumFirstRow(RealMatrix matrixToSum) {
@@ -41,7 +42,11 @@ public final class Neuron {
         return sum;
     }
 
-    private double activateFunctionValue(double value) {
-        return activationFunction.value(value);
+    public void setValue(double newValue){
+        this.neuronValue = newValue;
+    }
+
+    public double getInputDerivativeValue(){
+       return this.activationFunction.derivativeValue(inputsValue);
     }
 }

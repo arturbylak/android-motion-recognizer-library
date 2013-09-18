@@ -20,7 +20,7 @@ public final class PerceptionLayerProcessor implements LayerProcessor {
 
         for (int i = 0; i < secondLayer.getNeuronsCount(); i++) {
             Neuron neuron = neurons.get(i);
-            neuron.calculateNewNeuronValue(currentValues.transpose());
+            neuron.simulate(currentValues.transpose());
         }
     }
 }

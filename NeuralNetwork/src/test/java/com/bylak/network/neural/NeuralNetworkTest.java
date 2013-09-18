@@ -62,5 +62,10 @@ public class NeuralNetworkTest {
         public double value(double xValue) {
             return xValue;
         }
+
+        @Override
+        public double derivativeValue(double xValue) {
+            return 0;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.bylak.network.neural.teach;
 
 import com.bylak.network.layer.Layer;
+import com.bylak.network.neural.NeuralNetwork;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface NeutralNetworkTeachingAlgorithm {
-    void teach(final List<Layer> layers, final EpochData epochData, final TeachConfiguration teachConfiguration);
+    void teach(final NeuralNetwork neuralNetwork, final EpochData epochData, final TeachConfiguration teachConfiguration);
 }
