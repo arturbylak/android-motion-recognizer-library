@@ -1,6 +1,7 @@
 package com.bylak.network.neural.teach;
 
 import com.bylak.network.layer.Layer;
+import com.bylak.network.neural.Neuron;
 
 import java.util.List;
 
@@ -28,6 +29,27 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
     }
 
     private void propagate(final TeachData singleTeachData, final List<Layer> layers) {
+        int layersCount = layers.size();
+        double[][] errors = new double[layersCount][];
+
+        //prepare error matrix
+        for (int i = 0; i < layersCount; i++) {
+            Layer layer = layers.get(i);
+            errors[i] = new double[layer.getNeuronsCount()];
+        }
+
+        //Last layer
+        Layer lastLayer = layers.get(layersCount - 1);
+        double[] expectedOutputs = singleTeachData.getExpectedOutput();
+        for (int i = 0; i < lastLayer.getNeuronsCount(); i++) {
+            double expected = expectedOutputs[i];
+            Neuron neuronToPropagate = lastLayer.getNeuron(i);
+        }
+
+        //Other layers
+        for (int i = layersCount - 2; i >= 0; i--) {
+            Layer layer = layers.get(i);
+        }
 
     }
 }

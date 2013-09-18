@@ -50,4 +50,8 @@ public final class Layer {
     public List<Neuron> getNeurons() {
         return this.neurons;
     }
+
+    public Neuron getNeuron(int index) {
+        return this.neurons.get(index);
+    }
 }
