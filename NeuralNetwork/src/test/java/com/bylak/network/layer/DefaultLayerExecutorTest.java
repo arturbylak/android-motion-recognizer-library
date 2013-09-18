@@ -39,7 +39,7 @@ public class DefaultLayerExecutorTest {
         layerExecutor.execute(layers);
 
         //then
-        Mockito.verify(hiddenLayer).calculateNeuronsValues(inputLayer);
-        Mockito.verify(outputLayer).calculateNeuronsValues(hiddenLayer);
+        Mockito.verify(hiddenLayer).processLayer(inputLayer);
+        Mockito.verify(outputLayer).processLayer(hiddenLayer);
     }
 }

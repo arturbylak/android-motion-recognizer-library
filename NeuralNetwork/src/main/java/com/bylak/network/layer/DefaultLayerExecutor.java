@@ -15,7 +15,7 @@ public final class DefaultLayerExecutor implements LayerExecutor {
         for (int i = 0; i < layers.size() - 1; i++) {
             Layer layer = layers.get(i);
             Layer nextLayer = layers.get(i + 1);
-            nextLayer.calculateNeuronsValues(layer);
+            nextLayer.processLayer(layer);
         }
     }
 }

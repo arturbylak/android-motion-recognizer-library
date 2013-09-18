@@ -59,7 +59,7 @@ public class NeuralNetworkTest {
     private static final class TestActivationFunction implements ActivationFunction {
 
         @Override
-        public double calculate(double xValue) {
+        public double value(double xValue) {
             return xValue;
         }
     }

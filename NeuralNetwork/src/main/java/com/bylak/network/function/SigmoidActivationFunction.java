@@ -9,7 +9,14 @@ package com.bylak.network.function;
  */
 public final class SigmoidActivationFunction implements ActivationFunction {
     @Override
-    public double calculate(double xValue) {
+    public double value(double xValue) {
         return 1.0 / (1 + Math.exp(-1.0 * xValue));
+    }
+
+    @Override
+    public double derivativeValue(double xValue) {
+        double normalValue = value(xValue);
+
+        return normalValue * (1 - normalValue);
     }
 }

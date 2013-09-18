@@ -42,6 +42,6 @@ public final class Neuron {
     }
 
     private double activateFunctionValue(double value) {
-        return activationFunction.calculate(value);
+        return activationFunction.value(value);
     }
 }

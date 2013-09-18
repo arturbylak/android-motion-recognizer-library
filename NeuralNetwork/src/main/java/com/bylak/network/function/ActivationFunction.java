@@ -8,5 +8,6 @@ package com.bylak.network.function;
  * To change this template use File | Settings | File Templates.
  */
 public interface ActivationFunction {
-    double calculate(double xValue);
+    double value(double xValue);
+    double derivativeValue(double xValue);
 }

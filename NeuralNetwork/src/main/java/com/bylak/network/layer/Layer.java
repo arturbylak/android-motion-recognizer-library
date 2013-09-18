@@ -22,7 +22,7 @@ public final class Layer {
         this.layerProcessor = new PerceptionLayerProcessor();
     }
 
-    public void calculateNeuronsValues(final Layer layer) {
+    public void processLayer(final Layer layer) {
         layerProcessor.processLayer(layer, this);
     }
 
