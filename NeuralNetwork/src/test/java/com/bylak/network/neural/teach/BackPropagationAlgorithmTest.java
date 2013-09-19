@@ -5,7 +5,9 @@ import com.bylak.network.neural.NeuralNetwork;
 import com.bylak.network.neural.Neuron;
 import com.bylak.network.neural.TestActivationFunction;
 import com.bylak.network.util.ArrayListBuilder;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.List;
 
 /**
@@ -16,32 +18,30 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BackPropagationAlgorithmTest {
-    //Todo Refactoring
     @Test
     public void testTeach() throws Exception {
         //given
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
 
-        List<Neuron> inputNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{1}, 1, activationFunction))
-                .add(new Neuron(new double[]{2}, 1, activationFunction))
+        Layer inputLayer = new Layer.Builder()
+                .addNeuron(new Neuron(new double[]{1}, 1, activationFunction))
+                .addNeuron(new Neuron(new double[]{2}, 1, activationFunction))
                 .build();
-
-        List<Neuron> outputNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{3, 1}, 1, activationFunction))
+        Layer outputLayer = new Layer.Builder()
+                .addNeuron(new Neuron(new double[]{3, 1}, 1, activationFunction))
                 .build();
-
-        Layer inputLayer = new Layer(inputNeurons);
-        Layer outputLayer = new Layer(outputNeurons);
 
         neuralNetwork.addLayer(inputLayer);
         neuralNetwork.addLayer(outputLayer);
 
-        EpochData epochData = new EpochData.Builder().add(new TeachData(new double[]{1, 2},new double[]{3})).build();
+        EpochData epochData = new EpochData.Builder()
+                .add(new TeachData(new double[]{1, 2}, new double[]{3}))
+                .build();
 
         //when
         neuralNetwork.teach(epochData, new TeachConfiguration(0.01, 1, 1));
+
         double expectedOutput = 5.0d;
         double actualOutput = neuralNetwork.getOutput()[0];
         double[] expectedWag = {1.0d, -3.0d};
@@ -50,7 +50,7 @@ public class BackPropagationAlgorithmTest {
         //then
         Assert.assertEquals(expectedOutput, actualOutput, 0.01d);
 
-        for(int i=0; i<expectedWag.length; i++){
+        for (int i = 0; i < expectedWag.length; i++) {
             Assert.assertEquals(expectedWag[i], outputNeuron.getWag(i), 0.01d);
         }
 

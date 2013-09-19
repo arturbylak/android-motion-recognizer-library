@@ -22,23 +22,19 @@ public class NeuralNetworkTest {
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
 
-        List<Neuron> inputNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{1}, 1, activationFunction))
-                .add(new Neuron(new double[]{2}, 1, activationFunction))
+        Layer inputLayer = new Layer.Builder()
+                .addNeuron(new Neuron(new double[]{1}, 1, activationFunction))
+                .addNeuron(new Neuron(new double[]{2}, 1, activationFunction))
                 .build();
 
-        List<Neuron> hiddenNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{1, 2}, 1, activationFunction))
-                .add(new Neuron(new double[]{3, 4}, 1, activationFunction))
+        Layer hiddenLayer = new Layer.Builder()
+                .addNeuron(new Neuron(new double[]{1, 2}, 1, activationFunction))
+                .addNeuron(new Neuron(new double[]{3, 4}, 1, activationFunction))
                 .build();
 
-        List<Neuron> outputNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{3, 1}, 1, activationFunction))
+        Layer outputLayer = new Layer.Builder()
+                .addNeuron(new Neuron(new double[]{3, 1}, 1, activationFunction))
                 .build();
-
-        Layer inputLayer = new Layer(inputNeurons);
-        Layer hiddenLayer = new Layer(hiddenNeurons);
-        Layer outputLayer = new Layer(outputNeurons);
 
         neuralNetwork.addLayer(inputLayer);
         neuralNetwork.addLayer(hiddenLayer);

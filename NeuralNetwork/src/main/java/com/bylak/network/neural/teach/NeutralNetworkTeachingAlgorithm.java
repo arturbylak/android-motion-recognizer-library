@@ -1,9 +1,6 @@
 package com.bylak.network.neural.teach;
 
-import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.NeuralNetwork;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

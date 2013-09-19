@@ -4,6 +4,7 @@ import com.bylak.network.neural.Neuron;
 import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public final class Layer {
     private List<Neuron> neurons;
     private LayerProcessor layerProcessor;
 
-    public Layer(final List<Neuron> neurons) {
+    private Layer(final List<Neuron> neurons) {
         this.neurons = neurons;
         this.layerProcessor = new PerceptionLayerProcessor();
     }
@@ -53,5 +54,23 @@ public final class Layer {
 
     public Neuron getNeuron(int index) {
         return this.neurons.get(index);
+    }
+
+    public static class Builder{
+         private final List<Neuron> neurons;
+
+        public Builder(){
+            this.neurons = new ArrayList<Neuron>();
+        }
+
+        public Builder addNeuron(final Neuron neuron){
+            this.neurons.add(neuron);
+
+            return this;
+        }
+
+        public Layer build(){
+            return new Layer(neurons);
+        }
     }
 }
