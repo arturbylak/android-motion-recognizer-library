@@ -1,12 +1,8 @@
 package com.bylak.network.neural;
 
-import com.bylak.network.function.ActivationFunction;
 import com.bylak.network.layer.Layer;
-import com.bylak.network.util.ArrayListBuilder;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

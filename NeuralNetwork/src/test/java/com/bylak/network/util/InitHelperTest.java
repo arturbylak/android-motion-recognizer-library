@@ -2,7 +2,6 @@ package com.bylak.network.util;
 
 import com.bylak.network.exception.AggregatedException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +13,6 @@ import org.junit.rules.ExpectedException;
 public class InitHelperTest {
     @Test(expected = AggregatedException.class)
     public void testCheckNullValues() throws Exception {
-         InitHelper.checkNullValues(null, null);
+        InitHelper.checkNullValues(null, null);
     }
 }

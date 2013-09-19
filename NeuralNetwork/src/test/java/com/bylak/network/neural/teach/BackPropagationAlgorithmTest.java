@@ -4,11 +4,8 @@ import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.NeuralNetwork;
 import com.bylak.network.neural.Neuron;
 import com.bylak.network.neural.TestActivationFunction;
-import com.bylak.network.util.ArrayListBuilder;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

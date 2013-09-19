@@ -42,19 +42,19 @@ public final class Neuron {
         return sum;
     }
 
-    public void setValue(double newValue){
+    public void setValue(double newValue) {
         this.neuronValue = newValue;
     }
 
-    public double getInputDerivativeValue(){
-       return this.activationFunction.derivativeValue(inputsValue);
+    public double getInputDerivativeValue() {
+        return this.activationFunction.derivativeValue(inputsValue);
     }
 
     public double getWag(int index) {
         return this.wags.getEntry(index, 0);
     }
 
-    public void setWag(int index, double value){
+    public void setWag(int index, double value) {
         this.wags.setEntry(index, 0, value);
     }
 }

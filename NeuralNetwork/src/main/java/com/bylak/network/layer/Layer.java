@@ -56,20 +56,20 @@ public final class Layer {
         return this.neurons.get(index);
     }
 
-    public static class Builder{
-         private final List<Neuron> neurons;
+    public static class Builder {
+        private final List<Neuron> neurons;
 
-        public Builder(){
+        public Builder() {
             this.neurons = new ArrayList<Neuron>();
         }
 
-        public Builder addNeuron(final Neuron neuron){
+        public Builder addNeuron(final Neuron neuron) {
             this.neurons.add(neuron);
 
             return this;
         }
 
-        public Layer build(){
+        public Layer build() {
             return new Layer(neurons);
         }
     }

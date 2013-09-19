@@ -42,7 +42,36 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
         neuralNetwork.simulate();
         double[] currentOutputs = neuralNetwork.getOutput();
 
-        //Last layer
+        errors = calculateLastLayerError(singleTeachData, neuralNetwork, layersCount, errors, currentOutputs);
+        errors = calculateOtherLayerError(neuralNetwork, layersCount, errors);
+        modifyWags(neuralNetwork, learningAspect, layersCount, errors);
+    }
+
+    private double[][] calculateOtherLayerError(NeuralNetwork neuralNetwork, int layersCount, double[][] errors) {
+        //Other layers
+        for (int i = layersCount - 1; i > 0; i--) {
+            Layer previousLayer = neuralNetwork.getLayer(i - 1);
+            Layer currentLayer = neuralNetwork.getLayer(i);
+
+            RealMatrix layerErrors = MatrixUtils.createColumnRealMatrix(errors[i]).transpose();
+
+            for (int k = 0; k < previousLayer.getNeuronsCount(); k++) {
+                double[] wags = new double[currentLayer.getNeuronsCount()];
+                for (int j = 0; j < currentLayer.getNeuronsCount(); j++) {
+                    wags[j] = currentLayer.getNeuron(j).getWag(k);
+                }
+
+                RealMatrix wagsMatrix = MatrixUtils.createColumnRealMatrix(wags);
+                RealMatrix multiplied = layerErrors.multiply(wagsMatrix);
+                Neuron neuron = previousLayer.getNeuron(k);
+                errors[i - 1][k] = neuron.getInputDerivativeValue() * multiplied.getEntry(0, 0);
+            }
+        }
+
+        return errors;
+    }
+
+    private double[][] calculateLastLayerError(TeachData singleTeachData, NeuralNetwork neuralNetwork, int layersCount, double[][] errors, double[] currentOutputs) {
         Layer lastLayer = neuralNetwork.getLayer(layersCount - 1);
         double[] expectedOutputs = singleTeachData.getExpectedOutput();
         for (int i = 0; i < lastLayer.getNeuronsCount(); i++) {
@@ -53,28 +82,11 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
             errors[layersCount - 1][i] = error;
         }
 
-        //Other layers
+        return errors;
+    }
+
+    private void modifyWags(NeuralNetwork neuralNetwork, double learningAspect, int layersCount, double[][] errors) {
         for (int i = layersCount - 1; i > 0; i--) {
-            Layer previous = neuralNetwork.getLayer(i - 1);
-            Layer layer = neuralNetwork.getLayer(i);
-
-            RealMatrix layerErrors = MatrixUtils.createColumnRealMatrix(errors[i]).transpose();
-
-            for (int k = 0; k < previous.getNeuronsCount(); k++) {
-                double[] wags = new double[layer.getNeuronsCount()];
-                for (int j = 0; j < layer.getNeuronsCount(); j++) {
-                    wags[j] = layer.getNeuron(j).getWag(k);
-                }
-
-                RealMatrix wagsMatrix = MatrixUtils.createColumnRealMatrix(wags);
-                RealMatrix multiplied = layerErrors.multiply(wagsMatrix);
-                Neuron neuron = previous.getNeuron(k);
-                errors[i - 1][k] = neuron.getInputDerivativeValue() * multiplied.getEntry(0, 0);
-            }
-        }
-
-        //modify wags
-         for (int i = layersCount - 1; i > 0; i--) {
             Layer previous = neuralNetwork.getLayer(i - 1);
             Layer layer = neuralNetwork.getLayer(i);
 
@@ -91,7 +103,7 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
     private double[][] prepareErrorTable(final NeuralNetwork neuralNetwork) {
         int layersCount = neuralNetwork.getLayersCount();
         double[][] errors = new double[layersCount][];
-        //prepare error matrix
+
         for (int i = 0; i < layersCount; i++) {
             Layer layer = neuralNetwork.getLayer(i);
             errors[i] = new double[layer.getNeuronsCount()];

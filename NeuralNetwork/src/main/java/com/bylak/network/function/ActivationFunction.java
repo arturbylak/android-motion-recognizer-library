@@ -9,5 +9,6 @@ package com.bylak.network.function;
  */
 public interface ActivationFunction {
     double value(double xValue);
+
     double derivativeValue(double xValue);
 }
