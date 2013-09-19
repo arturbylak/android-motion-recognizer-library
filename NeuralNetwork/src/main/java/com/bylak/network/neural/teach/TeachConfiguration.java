@@ -10,10 +10,12 @@ package com.bylak.network.neural.teach;
 public final class TeachConfiguration {
     private final double maxErrorValue;
     private final int epochCount;
+    private final double learningAspect;
 
-    public TeachConfiguration(final double maxErrorValue, final int epochCount) {
+    public TeachConfiguration(final double maxErrorValue, final int epochCount, final double learningAspect) {
         this.maxErrorValue = maxErrorValue;
         this.epochCount = epochCount;
+        this.learningAspect = learningAspect;
     }
 
     public double getMaxErrorValue() {
@@ -22,5 +24,9 @@ public final class TeachConfiguration {
 
     public int getEpochCount() {
         return epochCount;
+    }
+
+    public double getLearningAspect() {
+        return learningAspect;
     }
 }

@@ -1,23 +1,24 @@
-package com.bylak.network.neural;
+package com.bylak.network.neural.teach;
 
-import com.bylak.network.function.ActivationFunction;
 import com.bylak.network.layer.Layer;
+import com.bylak.network.neural.NeuralNetwork;
+import com.bylak.network.neural.Neuron;
+import com.bylak.network.neural.TestActivationFunction;
 import com.bylak.network.util.ArrayListBuilder;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.*;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Artur.Bylak
- * Date: 23.08.13
- * Time: 20:52
+ * User: bylak
+ * Date: 19.09.13
+ * Time: 21:13
  * To change this template use File | Settings | File Templates.
  */
-public class NeuralNetworkTest {
+public class BackPropagationAlgorithmTest {
+    //Todo Refactoring
     @Test
-    public void testSimulate() throws Exception {
+    public void testTeach() throws Exception {
         //given
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
@@ -27,32 +28,31 @@ public class NeuralNetworkTest {
                 .add(new Neuron(new double[]{2}, 1, activationFunction))
                 .build();
 
-        List<Neuron> hiddenNeurons = new ArrayListBuilder<Neuron>()
-                .add(new Neuron(new double[]{1, 2}, 1, activationFunction))
-                .add(new Neuron(new double[]{3, 4}, 1, activationFunction))
-                .build();
-
         List<Neuron> outputNeurons = new ArrayListBuilder<Neuron>()
                 .add(new Neuron(new double[]{3, 1}, 1, activationFunction))
                 .build();
 
         Layer inputLayer = new Layer(inputNeurons);
-        Layer hiddenLayer = new Layer(hiddenNeurons);
         Layer outputLayer = new Layer(outputNeurons);
 
         neuralNetwork.addLayer(inputLayer);
-        neuralNetwork.addLayer(hiddenLayer);
         neuralNetwork.addLayer(outputLayer);
 
-        int expectedLength = 1;
-        int expectedValue = 16;
+        EpochData epochData = new EpochData.Builder().add(new TeachData(new double[]{1, 2},new double[]{3})).build();
 
         //when
-        neuralNetwork.simulate();
-        double[] simulateResult = neuralNetwork.getOutput();
+        neuralNetwork.teach(epochData, new TeachConfiguration(0.01, 1, 1));
+        double expectedOutput = 5.0d;
+        double actualOutput = neuralNetwork.getOutput()[0];
+        double[] expectedWag = {1.0d, -3.0d};
+        Neuron outputNeuron = outputLayer.getNeuron(0);
 
         //then
-        Assert.assertTrue(simulateResult.length == expectedLength);
-        Assert.assertTrue(simulateResult[0] == expectedValue);
+        Assert.assertEquals(expectedOutput, actualOutput, 0.01d);
+
+        for(int i=0; i<expectedWag.length; i++){
+            Assert.assertEquals(expectedWag[i], outputNeuron.getWag(i), 0.01d);
+        }
+
     }
 }

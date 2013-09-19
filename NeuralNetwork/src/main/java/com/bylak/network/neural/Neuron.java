@@ -49,4 +49,12 @@ public final class Neuron {
     public double getInputDerivativeValue(){
        return this.activationFunction.derivativeValue(inputsValue);
     }
+
+    public double getWag(int index) {
+        return this.wags.getEntry(index, 0);
+    }
+
+    public void setWag(int index, double value){
+        this.wags.setEntry(index, 0, value);
+    }
 }
