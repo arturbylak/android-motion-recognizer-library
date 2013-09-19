@@ -13,12 +13,12 @@ import java.util.List;
 public final class EpochData {
     private final List<TeachData> teachData;
 
-    public EpochData(final List<TeachData> teachData) {
+    private EpochData(final List<TeachData> teachData) {
         this.teachData = teachData;
     }
 
     public List<TeachData> getTeachData() {
-        return teachData;
+        return new ArrayList<TeachData>(teachData);
     }
 
     public int getSize() {
