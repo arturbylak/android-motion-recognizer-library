@@ -30,7 +30,7 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
     }
 
     private void teach(final NeuralNetwork neuralNetwork, final EpochData epochData, int teachDataCount, double learningAspect) {
-        List<Integer> permutation = generatePermutation(0,teachDataCount);
+        List<Integer> permutation = generatePermutation(0, teachDataCount);
         for (int i = 0; i < teachDataCount; i++) {
             Integer dataIndexToProcess = permutation.get(i);
             TeachData singleTeachData = epochData.getElement(dataIndexToProcess);
@@ -39,10 +39,10 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
         }
     }
 
-    public List<Integer> generatePermutation(int startIndex, int stopIndex){
+    public List<Integer> generatePermutation(int startIndex, int stopIndex) {
         List<Integer> permutation = new ArrayList<Integer>();
 
-        for(int i=startIndex; i<stopIndex; i++){
+        for (int i = startIndex; i < stopIndex; i++) {
             permutation.add(i);
         }
 

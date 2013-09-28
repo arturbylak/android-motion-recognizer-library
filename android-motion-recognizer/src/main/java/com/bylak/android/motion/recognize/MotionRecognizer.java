@@ -15,34 +15,34 @@ import java.util.Map;
 public final class MotionRecognizer {
     private final Map<MotionType, NeuralNetwork> networks;
 
-    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks){
+    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks) {
         this.networks = networks;
     }
 
-    public MotionRecognizer network(final NeuralNetwork networkToAdd, final MotionType motionType){
+    public MotionRecognizer network(final NeuralNetwork networkToAdd, final MotionType motionType) {
         this.networks.put(motionType, networkToAdd);
 
         return this;
     }
 
-    public void remove(final MotionType motionType){
+    public void remove(final MotionType motionType) {
         this.networks.remove(motionType);
     }
 
-    public static class Builder{
+    public static class Builder {
         private final Map<MotionType, NeuralNetwork> networks;
 
-        public Builder(){
+        public Builder() {
             this.networks = new HashMap<>();
         }
 
-        public Builder add(final NeuralNetwork networkToAdd, final MotionType motionType){
+        public Builder add(final NeuralNetwork networkToAdd, final MotionType motionType) {
             this.networks.put(motionType, networkToAdd);
 
             return this;
         }
 
-        public MotionRecognizer build(){
+        public MotionRecognizer build() {
             return new MotionRecognizer(this.networks);
         }
     }

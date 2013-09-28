@@ -25,12 +25,12 @@ public final class Neuron {
         this.activationFunction = activationFunction;
     }
 
-    public static Neuron createNeuron(int inputCount, final ActivationFunction activationFunction){
+    public static Neuron createNeuron(int inputCount, final ActivationFunction activationFunction) {
         Random random = new Random();
         double wags[] = new double[inputCount];
         double neuronValue = random.nextDouble();
 
-        for(int i=0; i<wags.length; i++){
+        for (int i = 0; i < wags.length; i++) {
             double newWag = random.nextDouble();
             wags[i] = newWag;
         }
