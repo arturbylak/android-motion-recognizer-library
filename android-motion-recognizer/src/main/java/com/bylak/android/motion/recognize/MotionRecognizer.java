@@ -1,5 +1,6 @@
 package com.bylak.android.motion.recognize;
 
+import android.hardware.Sensor;
 import com.bylak.network.neural.NeuralNetwork;
 
 import java.util.HashMap;
@@ -14,9 +15,11 @@ import java.util.Map;
  */
 public final class MotionRecognizer {
     private final Map<MotionType, NeuralNetwork> networks;
+    private final Sensor sensor;
 
-    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks) {
+    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final Sensor sensor) {
         this.networks = networks;
+        this.sensor = sensor;
     }
 
     public MotionRecognizer network(final NeuralNetwork networkToAdd, final MotionType motionType) {
@@ -31,9 +34,11 @@ public final class MotionRecognizer {
 
     public static class Builder {
         private final Map<MotionType, NeuralNetwork> networks;
+        private final Sensor sensor;
 
-        public Builder() {
+        public Builder(final Sensor sensor) {
             this.networks = new HashMap<>();
+            this.sensor = sensor;
         }
 
         public Builder add(final NeuralNetwork networkToAdd, final MotionType motionType) {
@@ -43,7 +48,7 @@ public final class MotionRecognizer {
         }
 
         public MotionRecognizer build() {
-            return new MotionRecognizer(this.networks);
+            return new MotionRecognizer(this.networks, sensor);
         }
     }
 }
