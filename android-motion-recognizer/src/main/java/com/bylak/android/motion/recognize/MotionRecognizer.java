@@ -34,15 +34,20 @@ public final class MotionRecognizer {
 
     public static class Builder {
         private final Map<MotionType, NeuralNetwork> networks;
-        private final Sensor sensor;
+        private Sensor sensor;
 
-        public Builder(final Sensor sensor) {
+        public Builder() {
             this.networks = new HashMap<>();
-            this.sensor = sensor;
         }
 
         public Builder add(final NeuralNetwork networkToAdd, final MotionType motionType) {
             this.networks.put(motionType, networkToAdd);
+
+            return this;
+        }
+
+        public Builder sensor(final Sensor sensor){
+            this.sensor = sensor;
 
             return this;
         }
