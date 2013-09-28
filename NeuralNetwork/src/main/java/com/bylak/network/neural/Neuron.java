@@ -4,6 +4,8 @@ import com.bylak.network.function.ActivationFunction;
 import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 
+import java.util.Random;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Artur.Bylak
@@ -21,6 +23,19 @@ public final class Neuron {
         this.wags = MatrixUtils.createColumnRealMatrix(wags);
         this.neuronValue = neuronValue;
         this.activationFunction = activationFunction;
+    }
+
+    public static Neuron createNeuron(int inputCount, final ActivationFunction activationFunction){
+        Random random = new Random();
+        double wags[] = new double[inputCount];
+        double neuronValue = random.nextDouble();
+
+        for(int i=0; i<wags.length; i++){
+            double newWag = random.nextDouble();
+            wags[i] = newWag;
+        }
+
+        return new Neuron(wags, neuronValue, activationFunction);
     }
 
     public double getValue() {

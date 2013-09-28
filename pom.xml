@@ -11,10 +11,10 @@
 
     <modules>
         <module>NeuralNetwork</module>
+        <module>android-motion-recognizer</module>
     </modules>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -26,7 +26,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
-
 </project>
