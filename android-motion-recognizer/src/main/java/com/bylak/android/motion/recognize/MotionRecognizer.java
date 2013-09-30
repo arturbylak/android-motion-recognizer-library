@@ -1,6 +1,9 @@
 package com.bylak.android.motion.recognize;
 
 import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import com.bylak.android.motion.recognize.listener.DefaultSensorEventListener;
+import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
 import com.bylak.network.neural.NeuralNetwork;
 
 import java.util.HashMap;
@@ -15,26 +18,39 @@ import java.util.Map;
  */
 public final class MotionRecognizer {
     private final Map<MotionType, NeuralNetwork> networks;
-    private final Sensor sensor;
+    private final SensorManager sensorManager;
+    private final OnRecognizedListener onRecognizedListener;
 
-    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final Sensor sensor) {
+    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final SensorManager sensorManager, final OnRecognizedListener onRecognizedListener) {
         this.networks = networks;
-        this.sensor = sensor;
+        this.sensorManager = sensorManager;
+        this.onRecognizedListener = onRecognizedListener;
+
+        init();
     }
 
-    public MotionRecognizer network(final NeuralNetwork networkToAdd, final MotionType motionType) {
+    public void init() {
+        registerSensorListeners();
+    }
+
+    private void registerSensorListeners() {
+        this.sensorManager.registerListener(new DefaultSensorEventListener(onRecognizedListener), sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    public MotionRecognizer addNetwork(final NeuralNetwork networkToAdd, final MotionType motionType) {
         this.networks.put(motionType, networkToAdd);
 
         return this;
     }
 
-    public void remove(final MotionType motionType) {
+    public void removeNetwork(final MotionType motionType) {
         this.networks.remove(motionType);
     }
 
     public static class Builder {
         private final Map<MotionType, NeuralNetwork> networks;
-        private Sensor sensor;
+        private SensorManager sensorManager;
+        private OnRecognizedListener onRecognizedListener;
 
         public Builder() {
             this.networks = new HashMap<>();
@@ -46,14 +62,20 @@ public final class MotionRecognizer {
             return this;
         }
 
-        public Builder sensor(final Sensor sensor){
-            this.sensor = sensor;
+        public Builder sensor(final SensorManager sensorManager) {
+            this.sensorManager = sensorManager;
+
+            return this;
+        }
+
+        public Builder recognizedListener(final OnRecognizedListener onRecognizedListener) {
+            this.onRecognizedListener = onRecognizedListener;
 
             return this;
         }
 
         public MotionRecognizer build() {
-            return new MotionRecognizer(this.networks, sensor);
+            return new MotionRecognizer(this.networks, sensorManager, onRecognizedListener);
         }
     }
 }
