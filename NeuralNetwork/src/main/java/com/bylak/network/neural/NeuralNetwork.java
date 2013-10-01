@@ -64,4 +64,10 @@ public final class NeuralNetwork {
             inputNeuron.setValue(input);
         }
     }
+
+    public int getInputCount() {
+        Layer inputLayer = getLayer(0);
+
+        return inputLayer.getNeuronsCount();
+    }
 }

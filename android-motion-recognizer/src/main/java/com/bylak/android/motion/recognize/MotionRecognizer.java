@@ -2,7 +2,7 @@ package com.bylak.android.motion.recognize;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import com.bylak.android.motion.recognize.listener.DefaultSensorEventListener;
+import com.bylak.android.motion.recognize.listener.MotionProcessor;
 import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
 import com.bylak.network.neural.NeuralNetwork;
 
@@ -19,12 +19,15 @@ import java.util.Map;
 public final class MotionRecognizer {
     private final Map<MotionType, NeuralNetwork> networks;
     private final SensorManager sensorManager;
-    private final OnRecognizedListener onRecognizedListener;
+    private final MotionProcessor motionProcessor;
+    private final Sensor selectedSensor;
 
-    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final SensorManager sensorManager, final OnRecognizedListener onRecognizedListener) {
+    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final SensorManager sensorManager, final OnRecognizedListener onRecognizedListener, double thresholdValue) {
         this.networks = networks;
         this.sensorManager = sensorManager;
-        this.onRecognizedListener = onRecognizedListener;
+
+        selectedSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        motionProcessor = new MotionProcessor(selectedSensor, onRecognizedListener, networks, thresholdValue);
 
         init();
     }
@@ -34,7 +37,7 @@ public final class MotionRecognizer {
     }
 
     private void registerSensorListeners() {
-        this.sensorManager.registerListener(new DefaultSensorEventListener(onRecognizedListener), sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        this.sensorManager.registerListener(motionProcessor, selectedSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public MotionRecognizer addNetwork(final NeuralNetwork networkToAdd, final MotionType motionType) {
@@ -51,6 +54,7 @@ public final class MotionRecognizer {
         private final Map<MotionType, NeuralNetwork> networks;
         private SensorManager sensorManager;
         private OnRecognizedListener onRecognizedListener;
+        private double thresholdValue;
 
         public Builder() {
             this.networks = new HashMap<>();
@@ -68,6 +72,12 @@ public final class MotionRecognizer {
             return this;
         }
 
+        public Builder threshold(final double thresholdValue) {
+            this.thresholdValue = thresholdValue;
+
+            return this;
+        }
+
         public Builder recognizedListener(final OnRecognizedListener onRecognizedListener) {
             this.onRecognizedListener = onRecognizedListener;
 
@@ -75,7 +85,7 @@ public final class MotionRecognizer {
         }
 
         public MotionRecognizer build() {
-            return new MotionRecognizer(this.networks, sensorManager, onRecognizedListener);
+            return new MotionRecognizer(this.networks, sensorManager, onRecognizedListener, thresholdValue);
         }
     }
 }

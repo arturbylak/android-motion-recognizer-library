@@ -8,5 +8,5 @@ package com.bylak.android.normalize;
  * To change this template use File | Settings | File Templates.
  */
 public interface InputProcessor {
-    double[] processInput(int expectedOutputCount, double[] dataToProcess);
+    double[] processInput(int expectedOutputCount, float[] dataToProcess);
 }

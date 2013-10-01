@@ -8,7 +8,17 @@ package com.bylak.android.normalize;
  * To change this template use File | Settings | File Templates.
  */
 public final class DefaultInputProcessor implements InputProcessor {
-    public double[] processInput(int expectedOutputCount, double[] dataToProcess) {
+    public double[] processInput(int expectedOutputCount, float[] dataToProcess) {
+        double[] normalizedData = normalize(dataToProcess);
+
+        return changeSize(normalizedData, expectedOutputCount);
+    }
+
+    public double[] normalize(float[] dataToProcess) {
+        return new double[0];
+    }
+
+    public double[] changeSize(double[] dataToProcess, int expectedOutputCount) {
         return dataToProcess;
     }
 }
