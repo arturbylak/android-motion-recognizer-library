@@ -2,7 +2,6 @@ package com.bylak.android.motion.recognize;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import com.bylak.android.motion.recognize.listener.MotionProcessor;
 import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
 import com.bylak.network.neural.NeuralNetwork;
 

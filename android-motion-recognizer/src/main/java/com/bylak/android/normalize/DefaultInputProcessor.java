@@ -9,16 +9,50 @@ package com.bylak.android.normalize;
  */
 public final class DefaultInputProcessor implements InputProcessor {
     public double[] processInput(int expectedOutputCount, float[] dataToProcess) {
+
+        if (expectedOutputCount < 0) {
+            throw new IllegalArgumentException("Expected count should be positive");
+        }
+
+        if (dataToProcess == null || dataToProcess.length < 1) {
+            throw new IllegalArgumentException("Incorrect data to process");
+        }
+
         double[] normalizedData = normalize(dataToProcess);
 
         return changeSize(normalizedData, expectedOutputCount);
     }
 
-    public double[] normalize(float[] dataToProcess) {
-        return new double[0];
+    private double[] normalize(float[] dataToProcess) {
+        int length = dataToProcess.length;
+
+        double min = dataToProcess[0];
+        double max = dataToProcess[0];
+        for (int i = 0; i < length; i++) {
+            double currentValue = dataToProcess[i];
+
+            if (currentValue > max) max = currentValue;
+            if (currentValue < min) min = currentValue;
+        }
+
+        return normalize(max, min, dataToProcess);
     }
 
-    public double[] changeSize(double[] dataToProcess, int expectedOutputCount) {
+    private double[] normalize(double max, double min, float[] dataToNormalzie) {
+        int length = dataToNormalzie.length;
+        double[] normalziedData = new double[length];
+        double diff = (max - min);
+
+        for (int i = 0; i < length; i++) {
+            double currentValue = dataToNormalzie[i];
+
+            normalziedData[i] = (currentValue - min) / diff;
+        }
+
+        return normalziedData;
+    }
+
+    private double[] changeSize(double[] dataToProcess, int expectedOutputCount) {
         return dataToProcess;
     }
 }
