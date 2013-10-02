@@ -57,6 +57,33 @@ public final class DefaultInputProcessor implements InputProcessor {
     }
 
     private double[] changeSize(double[] dataToProcess, int expectedOutputCount) {
+        int length = dataToProcess.length;
+
+        if (expectedOutputCount == length) {
+            return dataToProcess;
+        } else if (expectedOutputCount == 2 && length > 2) {
+            return new double[]{dataToProcess[0], dataToProcess[length - 1]};
+        } else if (expectedOutputCount < length) {
+            return reduceArray(dataToProcess, expectedOutputCount);
+        } else {
+            return resizeArray(dataToProcess, expectedOutputCount);
+        }
+    }
+
+    private double[] reduceArray(double[] dataToProcess, int expectedOutputCount) {
+        double[] reducedValues = new double[expectedOutputCount];
+        int currentLength = dataToProcess.length;
+        int step = currentLength / expectedOutputCount;
+
+        for (int i = 0; i < expectedOutputCount; i++) {
+            int nextIndex = i * step;
+            reducedValues[i] = dataToProcess[nextIndex];
+        }
+
+        return reducedValues;
+    }
+
+    private double[] resizeArray(double[] dataToProcess, int expectedOutputCount) {
         return dataToProcess;
     }
 }
