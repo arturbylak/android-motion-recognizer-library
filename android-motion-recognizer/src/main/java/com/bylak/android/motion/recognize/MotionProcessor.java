@@ -37,7 +37,7 @@ public final class MotionProcessor implements SensorEventListener {
         Map<MotionType, Double[]> simulationOutput = simulator.invokeAll(values);
         MotionType motionType = motionResolver.resolve(simulationOutput);
 
-        if (motionType.getId() != -MOTION_UNKNOWN) {
+        if (motionType.getId() != MOTION_UNKNOWN) {
             onRecognizedListener.onRecognize(motionType);
         }
     }
