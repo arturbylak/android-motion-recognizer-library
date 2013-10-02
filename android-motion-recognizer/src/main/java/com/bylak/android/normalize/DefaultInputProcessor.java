@@ -31,8 +31,12 @@ public final class DefaultInputProcessor implements InputProcessor {
         for (int i = 0; i < length; i++) {
             double currentValue = dataToProcess[i];
 
-            if (currentValue > max) max = currentValue;
-            if (currentValue < min) min = currentValue;
+            if (currentValue > max) {
+                max = currentValue;
+            }
+            if (currentValue < min) {
+                min = currentValue;
+            }
         }
 
         return normalize(max, min, dataToProcess);
