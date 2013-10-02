@@ -21,6 +21,8 @@ public final class MotionProcessor implements SensorEventListener {
     private final NeuralNetworkSimulator simulator;
     private final MotionResolver motionResolver;
 
+    public static final int MOTION_UNKNOWN = -1;
+
     public MotionProcessor(final Sensor sensor, final OnRecognizedListener onRecognizedListener, final Map<MotionType, NeuralNetwork> networks, double thresholdValue) {
         this.onRecognizedListener = onRecognizedListener;
         this.sensor = sensor;
@@ -33,7 +35,11 @@ public final class MotionProcessor implements SensorEventListener {
         float[] values = sensorEvent.values;
 
         Map<MotionType, Double[]> simulationOutput = simulator.invokeAll(values);
+        MotionType motionType = motionResolver.resolve(simulationOutput);
 
+        if (motionType.getId() != -MOTION_UNKNOWN) {
+            onRecognizedListener.onRecognize(motionType);
+        }
     }
 
     @Override
