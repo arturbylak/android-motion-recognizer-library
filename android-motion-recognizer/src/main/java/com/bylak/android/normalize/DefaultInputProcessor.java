@@ -83,7 +83,38 @@ public final class DefaultInputProcessor implements InputProcessor {
         return reducedValues;
     }
 
+    //TODO Refactoring
     private double[] resizeArray(double[] dataToProcess, int expectedOutputCount) {
-        return dataToProcess;
+        double[] resizedData = new double[expectedOutputCount];
+        int currentDataLength = dataToProcess.length;
+        int step = expectedOutputCount / currentDataLength;
+        int lastCurrentArrayIndex = currentDataLength - 1;
+
+        for (int i = 0; i < currentDataLength; i++) {
+            int newIndex = i * step;
+
+            if (newIndex < expectedOutputCount) {
+                resizedData[newIndex] = dataToProcess[i];
+            }
+        }
+
+        for (int i = 0; i < currentDataLength - 1; i++) {
+            int startIndex = i * step;
+            int stopIndex = (i + 1) * step;
+
+            double avg = (resizedData[startIndex] + resizedData[stopIndex]) / 2;
+
+            for (int j = startIndex + 1; j < stopIndex; j++) {
+                resizedData[j] = avg;
+            }
+        }
+
+        int previousIndex = (lastCurrentArrayIndex) * step;
+        double lastValue = resizedData[previousIndex];
+        for (int i = previousIndex + 1; i < expectedOutputCount; i++) {
+            resizedData[i] = lastValue;
+        }
+
+        return resizedData;
     }
 }
