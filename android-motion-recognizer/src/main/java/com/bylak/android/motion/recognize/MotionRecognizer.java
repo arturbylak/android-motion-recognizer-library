@@ -57,6 +57,7 @@ public final class MotionRecognizer {
 
         public Builder() {
             this.networks = new HashMap<>();
+            this.thresholdValue = 0.75;
         }
 
         public Builder add(final NeuralNetwork networkToAdd, final MotionType motionType) {
