@@ -43,6 +43,7 @@ public final class MotionProcessor implements SensorEventListener {
 
         if (queueSize == BUFFOR_SIZE) {
             processInput();
+            inputQueue.removeFirst();
         }
 
     }
