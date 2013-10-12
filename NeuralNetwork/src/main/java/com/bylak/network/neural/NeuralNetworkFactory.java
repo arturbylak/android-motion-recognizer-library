@@ -12,7 +12,7 @@ import com.bylak.network.layer.Layer;
  */
 public final class NeuralNetworkFactory {
 
-    public NeuralNetworkFactory() {
+    private  NeuralNetworkFactory() {
     }
 
     public static final NeuralNetwork createNetwork(int inputCount, int inputLayerCount, int hiddenLayerCount, int outputLayerCount, final ActivationFunction activationFunction) {

@@ -21,14 +21,12 @@ public final class MotionProcessor implements SensorEventListener {
     private static final int BUFFOR_SIZE = 50 * 3;
     private static final int PACKAGE_SIZE = 3;
     private final OnRecognizedListener onRecognizedListener;
-    private final Sensor sensor;
     private final NeuralNetworkSimulator simulator;
     private final MotionResolver motionResolver;
     private final InputQueue inputQueue;
 
-    public MotionProcessor(final Sensor sensor, final OnRecognizedListener onRecognizedListener, final Map<MotionType, NeuralNetwork> networks, double thresholdValue) {
+    public MotionProcessor(final OnRecognizedListener onRecognizedListener, final Map<MotionType, NeuralNetwork> networks, double thresholdValue) {
         this.onRecognizedListener = onRecognizedListener;
-        this.sensor = sensor;
         this.simulator = new NeuralNetworkSimulator(networks);
         this.motionResolver = new DefaultMotionResolver(thresholdValue);
         this.inputQueue = new InputQueue(PACKAGE_SIZE);

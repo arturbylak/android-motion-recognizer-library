@@ -26,7 +26,7 @@ public final class MotionRecognizer {
         this.sensorManager = sensorManager;
 
         selectedSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        motionProcessor = new MotionProcessor(selectedSensor, onRecognizedListener, networks, thresholdValue);
+        motionProcessor = new MotionProcessor(onRecognizedListener, networks, thresholdValue);
 
         init();
     }
