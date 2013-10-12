@@ -20,6 +20,7 @@ public class BackPropagationAlgorithmTest {
         //given
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
+        double input[] = {1d, 1d};
 
         Layer inputLayer = new Layer.Builder()
                 .addNeuron(new Neuron(new double[]{1}, 1, activationFunction))
@@ -37,9 +38,11 @@ public class BackPropagationAlgorithmTest {
                 .build();
 
         //when
-        neuralNetwork.teach(epochData, new TeachConfiguration(0.01, 1, 1));
+        neuralNetwork.teach(epochData, new TeachConfiguration(0.0001, 1, 1));
+        neuralNetwork.setInputs(input);
+        neuralNetwork.simulate();
 
-        double expectedOutput = 5.0d;
+        double expectedOutput = -2.0d;
         double actualOutput = neuralNetwork.getOutput()[0];
         double[] expectedWag = {1.0d, -3.0d};
         Neuron outputNeuron = outputLayer.getNeuron(0);

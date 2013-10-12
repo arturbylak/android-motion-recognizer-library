@@ -23,23 +23,24 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
         int teachDataCount = epochData.getSize();
         int epochCount = teachConfiguration.getEpochCount();
         double learningAspect = teachConfiguration.getLearningAspect();
+        double maxErrorValue = teachConfiguration.getMaxErrorValue();
+        double sse = Double.MAX_VALUE;
 
-        for (int i = 0; i < epochCount; i++) {
+        for (int i = 0; i < epochCount && sse > maxErrorValue; i++) {
             teach(neuralNetwork, epochData, teachDataCount, learningAspect);
+            sse = getCurrentSSE(neuralNetwork, epochData);
         }
     }
 
     private void teach(final NeuralNetwork neuralNetwork, final EpochData epochData, int teachDataCount, double learningAspect) {
         List<Integer> permutation = generatePermutation(0, teachDataCount);
-        for (int i = 0; i < teachDataCount; i++) {
-            Integer dataIndexToProcess = permutation.get(i);
-            TeachData singleTeachData = epochData.getElement(dataIndexToProcess);
 
-            propagate(singleTeachData, neuralNetwork, learningAspect);
+        for (int i = 0; i < teachDataCount; i++) {
+            propagate(neuralNetwork, epochData, learningAspect, permutation, i);
         }
     }
 
-    public List<Integer> generatePermutation(int startIndex, int stopIndex) {
+    private List<Integer> generatePermutation(int startIndex, int stopIndex) {
         List<Integer> permutation = new ArrayList<Integer>();
 
         for (int i = startIndex; i < stopIndex; i++) {
@@ -49,6 +50,40 @@ public final class BackPropagationAlgorithm implements NeutralNetworkTeachingAlg
         java.util.Collections.shuffle(permutation);
 
         return permutation;
+    }
+
+    private double getCurrentSSE(final NeuralNetwork neuralNetwork, final EpochData epochData) {
+        double sse = 0;
+        for (int i = 0; i < epochData.getSize(); i++) {
+            TeachData teachData = epochData.getElement(i);
+            neuralNetwork.setInputs(teachData.getInput());
+            neuralNetwork.simulate();
+            double[] simulationResult = neuralNetwork.getOutput();
+            double[] expectedOutput = teachData.getExpectedOutput();
+
+            double error = getOutputError(simulationResult, expectedOutput);
+            sse += Math.pow(error, 2);
+        }
+
+        return Math.sqrt(sse);
+    }
+
+    private double getOutputError(double[] results, double[] expectedDatas) {
+        double errorSum = 0;
+
+        for(int i=0; i<results.length; i++){
+            double diff = results[i] - expectedDatas[i];
+            errorSum += diff;
+        }
+
+        return errorSum;
+    }
+
+    private void propagate(NeuralNetwork neuralNetwork, EpochData epochData, double learningAspect, List<Integer> permutation, int i) {
+        Integer dataIndexToProcess = permutation.get(i);
+        TeachData singleTeachData = epochData.getElement(dataIndexToProcess);
+
+        propagate(singleTeachData, neuralNetwork, learningAspect);
     }
 
     private void propagate(final TeachData singleTeachData, final NeuralNetwork neuralNetwork, final double learningAspect) {

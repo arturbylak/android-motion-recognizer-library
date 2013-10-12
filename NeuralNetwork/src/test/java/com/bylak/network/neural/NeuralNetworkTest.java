@@ -1,6 +1,11 @@
 package com.bylak.network.neural;
 
+import com.bylak.network.function.ActivationFunction;
+import com.bylak.network.function.SigmoidActivationFunction;
 import com.bylak.network.layer.Layer;
+import com.bylak.network.neural.teach.EpochData;
+import com.bylak.network.neural.teach.TeachConfiguration;
+import com.bylak.network.neural.teach.TeachData;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,6 +17,18 @@ import org.junit.Test;
  * To change this template use File | Settings | File Templates.
  */
 public class NeuralNetworkTest {
+
+    private static final EpochData xorEpochData;
+
+    static {
+        xorEpochData = new EpochData.Builder()
+                .add(new TeachData(new double[]{0, 0}, new double[]{0}))
+                .add(new TeachData(new double[]{0, 1}, new double[]{1}))
+                .add(new TeachData(new double[]{1, 0}, new double[]{1}))
+                .add(new TeachData(new double[]{1, 1}, new double[]{0}))
+                .build();
+    }
+
     @Test
     public void testSimulate() throws Exception {
         //given
@@ -46,5 +63,89 @@ public class NeuralNetworkTest {
         //then
         Assert.assertTrue(simulateResult.length == expectedLength);
         Assert.assertTrue(simulateResult[0] == expectedValue);
+    }
+
+    @Test
+    public void testXor() {
+        //given
+        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+
+        TeachConfiguration configuration = new TeachConfiguration(0.01d, 4000000, 0.01);
+
+        //when
+        neuralNetwork.teach(xorEpochData, configuration);
+
+        //then
+        double output = simulate(neuralNetwork, new double[]{0, 0});
+        Assert.assertEquals(output, 0, 0.1d);
+
+        output = simulate(neuralNetwork, new double[]{0, 1});
+        Assert.assertEquals(output, 1, 0.1d);
+
+        output = simulate(neuralNetwork, new double[]{1, 0});
+        Assert.assertEquals(output, 1, 0.1d);
+
+        output = simulate(neuralNetwork, new double[]{1, 1});
+        Assert.assertEquals(output, 0, 0.1d);
+    }
+
+    @Test
+    public void testSSE() {
+        //given
+        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+        double maxErrorValue = 0.1d;
+        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 0.01);
+        double errorSum = 0;
+
+        //when
+        neuralNetwork.teach(xorEpochData, configuration);
+        double output = simulate(neuralNetwork, new double[]{0, 0});
+        errorSum =+ output - 0;
+
+        output = simulate(neuralNetwork, new double[]{0, 1});
+        errorSum =+ output -1;
+
+        output = simulate(neuralNetwork, new double[]{1, 0});
+        errorSum =+ output -1;
+
+        output = simulate(neuralNetwork, new double[]{1, 1});
+        errorSum =+ output - 0;
+
+        //then
+        Assert.assertTrue(errorSum < maxErrorValue);
+    }
+
+    private NeuralNetwork getXORNeuralNetwork() {
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork();
+        final ActivationFunction activationFunction = new SigmoidActivationFunction();
+
+        Layer inputLayer = new Layer.Builder()
+                .addNeuron(Neuron.createNeuron(1, activationFunction))
+                .addNeuron(Neuron.createNeuron(1, activationFunction))
+                .build();
+
+        Layer hiddenLayer = new Layer.Builder()
+                .addNeuron(Neuron.createNeuron(2, activationFunction))
+                .addNeuron(Neuron.createNeuron(2, activationFunction))
+                .build();
+
+        Layer outputLayer = new Layer.Builder()
+                .addNeuron(Neuron.createNeuron(2, activationFunction))
+                .build();
+
+        neuralNetwork.addLayer(inputLayer);
+        neuralNetwork.addLayer(hiddenLayer);
+        neuralNetwork.addLayer(outputLayer);
+
+        return neuralNetwork;
+    }
+
+    private double simulate(final NeuralNetwork neuralNetwork, final double[] inputs) {
+        neuralNetwork.setInputs(inputs);
+        neuralNetwork.simulate();
+        double[] output = neuralNetwork.getOutput();
+
+        return output[0];
     }
 }
