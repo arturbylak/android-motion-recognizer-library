@@ -18,7 +18,12 @@ public final class DefaultMotionResolver implements MotionResolver {
 
     @Override
     public MotionType resolve(final Map<MotionType, Double[]> simulationOutput) {
-        MotionType motionType = new MotionType(-1, "");
+
+        if(simulationOutput==null){
+            throw new IllegalArgumentException("Simulation output cant be null");
+        }
+
+        MotionType motionType = new MotionType(MotionType.UNKNOWN, "");
         double biggestValue = 0;
 
         for (Map.Entry<MotionType, Double[]> entry : simulationOutput.entrySet()) {
