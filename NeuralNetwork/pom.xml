@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>NeuralNetwork</groupId>
-    <artifactId>NeuralNetwork</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <groupId>neuralNetwork</groupId>
+    <artifactId>neuralNetwork</artifactId>
+    <version>0.1</version>
 
     <parent>
-        <groupId>Parent</groupId>
-        <artifactId>Parent</artifactId>
+        <groupId>android-motion-recognizer-library</groupId>
+        <artifactId>android-motion-recognizer-library</artifactId>
         <version>0.1</version>
     </parent>
 
