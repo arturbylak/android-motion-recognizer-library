@@ -3,7 +3,7 @@ package com.bylak.network.neural;
 import com.bylak.network.layer.DefaultLayerExecutor;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.layer.LayerExecutor;
-import com.bylak.network.neural.teach.BackPropagationAlgorithm;
+import com.bylak.network.neural.teach.OneOutputBackPropagationAlgorithm;
 import com.bylak.network.neural.teach.EpochData;
 import com.bylak.network.neural.teach.NeutralNetworkTeachingAlgorithm;
 import com.bylak.network.neural.teach.TeachConfiguration;
@@ -27,7 +27,7 @@ public final class NeuralNetwork {
     public NeuralNetwork() {
         this.layers = new ArrayList<Layer>();
         this.layerExecutor = new DefaultLayerExecutor();
-        this.teachingAlgorithm = new BackPropagationAlgorithm();
+        this.teachingAlgorithm = new OneOutputBackPropagationAlgorithm();
     }
 
     public void addLayer(final Layer layer) {
