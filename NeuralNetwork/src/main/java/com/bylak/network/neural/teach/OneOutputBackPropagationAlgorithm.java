@@ -137,8 +137,8 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
                 Neuron previousNeuron = previous.getNeuron(j);
                 double previousNeuronValue = previousNeuron.getValue();
                 Neuron currentNeuron = current.getNeuron(i);
-                double previousNeuronDerivativeValue = currentNeuron.getInputDerivativeValue();
-                double newWagCalculated = learningAspect *  error * previousNeuronValue * previousNeuronDerivativeValue;
+                double currentNeuronDerivativeValue = currentNeuron.getInputDerivativeValue();
+                double newWagCalculated = learningAspect *  error * previousNeuronValue * currentNeuronDerivativeValue;
                 double oldWag = currentNeuron.getWag(j);
                 current.getNeuron(i).setWag(j, oldWag + newWagCalculated);
             }
