@@ -18,9 +18,9 @@ public final class NeuralNetworkFactory {
     public static final NeuralNetwork createNetwork(int inputCount, int inputLayerCount, int hiddenLayerCount, int outputLayerCount, final ActivationFunction activationFunction) {
         NeuralNetwork neuralNetwork = new NeuralNetwork();
 
-        Layer inputLayer = createLayer(inputCount, inputLayerCount, activationFunction);
-        Layer hiddenLayer = createLayer(inputLayerCount, hiddenLayerCount, activationFunction);
-        Layer outputLayer = createLayer(hiddenLayerCount, outputLayerCount, activationFunction);
+        Layer inputLayer = createLayer(inputCount, inputLayerCount, activationFunction, true);
+        Layer hiddenLayer = createLayer(inputLayerCount, hiddenLayerCount, activationFunction, true);
+        Layer outputLayer = createLayer(hiddenLayerCount, outputLayerCount, activationFunction, false);
 
         neuralNetwork.addLayer(inputLayer);
         neuralNetwork.addLayer(hiddenLayer);
@@ -29,11 +29,16 @@ public final class NeuralNetworkFactory {
         return neuralNetwork;
     }
 
-    private static Layer createLayer(int inputCount, int inputLayerCount, ActivationFunction activationFunction) {
+    private static Layer createLayer(int inputCount, int inputLayerCount, ActivationFunction activationFunction, boolean bias) {
         Layer.Builder builder = new Layer.Builder();
         for (int i = 0; i < inputLayerCount; i++) {
-            builder.addNeuron(Neuron.createNeuron(inputCount, activationFunction));
+            builder.addNeuron(NeuronImpl.createNeuron(inputCount, activationFunction));
         }
+
+        if(bias){
+            builder.addNeuron(Bias.createBias(activationFunction));
+        }
+
         return builder.build();
     }
 }

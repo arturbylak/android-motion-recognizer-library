@@ -3,6 +3,7 @@ package com.bylak.network.neural.teach;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.NeuralNetwork;
 import com.bylak.network.neural.Neuron;
+import com.bylak.network.neural.NeuronImpl;
 import com.bylak.network.neural.TestActivationFunction;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,11 +24,11 @@ public class BackPropagationAlgorithmTest {
         double input[] = {1d, 1d};
 
         Layer inputLayer = new Layer.Builder()
-                .addNeuron(new Neuron(new double[]{1}, 1, activationFunction))
-                .addNeuron(new Neuron(new double[]{2}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{1}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{2}, 1, activationFunction))
                 .build();
         Layer outputLayer = new Layer.Builder()
-                .addNeuron(new Neuron(new double[]{3, 1}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{3, 1}, 1, activationFunction))
                 .build();
 
         neuralNetwork.addLayer(inputLayer);

@@ -1,6 +1,7 @@
 package com.bylak.network.layer;
 
 import com.bylak.network.neural.Neuron;
+import com.bylak.network.neural.NeuronImpl;
 import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 
