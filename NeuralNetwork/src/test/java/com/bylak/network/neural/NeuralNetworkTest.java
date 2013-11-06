@@ -48,7 +48,7 @@ public class NeuralNetworkTest {
                 .build();
         zero3 = new EpochData.Builder()
                 .add(new TeachData(new double[]{1, 0}, new double[]{0}))
-                .add(new TeachData(new double[]{1, 1}, new double[]{1}))
+
                 .build();
     }
 
@@ -59,17 +59,17 @@ public class NeuralNetworkTest {
         final TestActivationFunction activationFunction = new TestActivationFunction();
 
         Layer inputLayer = new Layer.Builder()
-                .addNeuron(new Neuron(new double[]{1}, 1, activationFunction))
-                .addNeuron(new Neuron(new double[]{2}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{1}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{2}, 1, activationFunction))
                 .build();
 
         Layer hiddenLayer = new Layer.Builder()
-                .addNeuron(new Neuron(new double[]{1, 2}, 1, activationFunction))
-                .addNeuron(new Neuron(new double[]{3, 4}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{1, 2}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{3, 4}, 1, activationFunction))
                 .build();
 
         Layer outputLayer = new Layer.Builder()
-                .addNeuron(new Neuron(new double[]{3, 1}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{3, 1}, 1, activationFunction))
                 .build();
 
         neuralNetwork.addLayer(inputLayer);
@@ -89,28 +89,28 @@ public class NeuralNetworkTest {
     }
 
     //Run manually - long
-    // @Test
+    //  @Test
     public void testXor() {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
 
-        TeachConfiguration configuration = new TeachConfiguration(0.01d, 4000000, 0.01);
+        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 0.01d);
 
         //when
         neuralNetwork.teach(xorEpochData, configuration);
 
         //then
         double output = simulate(neuralNetwork, new double[]{0, 0});
-        Assert.assertEquals(output, 0, 0.1d);
+        Assert.assertEquals(0, output, 0.1d);
 
         output = simulate(neuralNetwork, new double[]{0, 1});
-        Assert.assertEquals(output, 1, 0.1d);
+        Assert.assertEquals(1,output,  0.1d);
 
         output = simulate(neuralNetwork, new double[]{1, 0});
-        Assert.assertEquals(output, 1, 0.1d);
+        Assert.assertEquals(1, output,  0.1d);
 
         output = simulate(neuralNetwork, new double[]{1, 1});
-        Assert.assertEquals(output, 0, 0.1d);
+        Assert.assertEquals(0, output, 0.1d);
     }
 
     //Run manually - long
@@ -119,7 +119,7 @@ public class NeuralNetworkTest {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
         double maxErrorValue = 0.2d;
-        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 0.01);
+        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1);
         double errorSum = 0;
 
         //when
@@ -146,17 +146,21 @@ public class NeuralNetworkTest {
         final ActivationFunction activationFunction = new SigmoidActivationFunction();
 
         Layer inputLayer = new Layer.Builder()
-                .addNeuron(Neuron.createNeuron(1, activationFunction))
-                .addNeuron(Neuron.createNeuron(1, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(1, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(1, activationFunction))
+                .addNeuron(Bias.createBias(activationFunction))
                 .build();
 
         Layer hiddenLayer = new Layer.Builder()
-                .addNeuron(Neuron.createNeuron(2, activationFunction))
-                .addNeuron(Neuron.createNeuron(2, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
+                .addNeuron(Bias.createBias(activationFunction))
                 .build();
 
         Layer outputLayer = new Layer.Builder()
-                .addNeuron(Neuron.createNeuron(2, activationFunction))
+                .addNeuron(NeuronImpl.createNeuron(5, activationFunction))
                 .build();
 
         neuralNetwork.addLayer(inputLayer);

@@ -3,8 +3,6 @@ package com.bylak.network.neural.teach;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.NeuralNetwork;
 import com.bylak.network.neural.Neuron;
-import org.apache.commons.math.linear.MatrixUtils;
-import org.apache.commons.math.linear.RealMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +16,29 @@ import java.util.List;
  */
 public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTeachingAlgorithm {
 
+    private final LeaningFactorCalculator learningFactorCalculator;
+
+    public OneOutputBackPropagationAlgorithm() {
+        this.learningFactorCalculator = new DefaultLearningFactorCalculator();
+    }
+
     @Override
     public void teach(final NeuralNetwork neuralNetwork, final EpochData epochData, final TeachConfiguration teachConfiguration) {
         int teachDataCount = epochData.getSize();
         int epochCount = teachConfiguration.getEpochCount();
-        double learningAspect = teachConfiguration.getLearningAspect();
+        double learningFactor = teachConfiguration.getLearningFactor();
         double maxErrorValue = teachConfiguration.getMaxErrorValue();
         double sse = Double.MAX_VALUE;
+        double lastSSE = 0;
 
         for (int i = 0; i < epochCount && sse > maxErrorValue; i++) {
-            teach(neuralNetwork, epochData, teachDataCount, learningAspect);
+            teach(neuralNetwork, epochData, teachDataCount, learningFactor);
+            lastSSE = sse;
             sse = getCurrentSSE(neuralNetwork, epochData);
+            learningFactor = calculateFactor(sse, lastSSE, learningFactor);
+
+            System.out.println("SSE = " + sse + "LA = " + learningFactor);
+
         }
     }
 
@@ -66,6 +76,10 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         }
 
         return Math.sqrt(sse);
+    }
+
+    private double calculateFactor( double sse, double lastSSE, double learningAspect) {
+        return learningFactorCalculator.calculate(sse, lastSSE, learningAspect);
     }
 
     private double getOutputError(double[] results, double[] expectedDatas) {
