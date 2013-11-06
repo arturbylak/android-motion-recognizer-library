@@ -36,9 +36,6 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
             lastSSE = sse;
             sse = getCurrentSSE(neuralNetwork, epochData);
             learningFactor = calculateFactor(sse, lastSSE, learningFactor);
-
-            System.out.println("SSE = " + sse + "LA = " + learningFactor);
-
         }
     }
 
