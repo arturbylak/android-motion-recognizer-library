@@ -8,16 +8,16 @@ package com.bylak.network.neural.teach;
  * To change this template use File | Settings | File Templates.
  */
 public class DefaultLearningFactorCalculator implements LeaningFactorCalculator{
-    private double kw = 1.04;
-    private double pi = 1.05;
-    private double pd = 0.7;
+    private static final double KW = 1.04;
+    private static final double PI = 1.05;
+    private static final double PD = 0.7;
 
     @Override
     public double calculate(double currentSSE, double lastSSE, double lastLearningFactor) {
-        if(currentSSE - (kw * lastSSE) > 0){
-            lastLearningFactor = lastLearningFactor * pd;
+        if(currentSSE - (KW * lastSSE) > 0){
+            lastLearningFactor = lastLearningFactor * PD;
         }else{
-            lastLearningFactor = lastLearningFactor * pi;
+            lastLearningFactor = lastLearningFactor * PI;
         }
 
         return lastLearningFactor;
