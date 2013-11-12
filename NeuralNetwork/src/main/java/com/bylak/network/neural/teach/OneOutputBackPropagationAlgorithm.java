@@ -17,6 +17,8 @@ import java.util.List;
 public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTeachingAlgorithm {
 
     private final LeaningFactorCalculator learningFactorCalculator;
+    private BackPropagationWeightStorage oldWeightStorage;
+    private BackPropagationWeightStorage tempOldWeightStorage;
 
     public OneOutputBackPropagationAlgorithm() {
         this.learningFactorCalculator = new DefaultLearningFactorCalculator();
@@ -30,20 +32,38 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         double maxErrorValue = teachConfiguration.getMaxErrorValue();
         double sse = Double.MAX_VALUE;
         double lastSSE = 0;
+        oldWeightStorage = createStorage(neuralNetwork);
+        tempOldWeightStorage = createStorage(neuralNetwork);
 
         for (int i = 0; i < epochCount && sse > maxErrorValue; i++) {
             teach(neuralNetwork, epochData, teachDataCount, learningFactor);
             lastSSE = sse;
             sse = getCurrentSSE(neuralNetwork, epochData);
             learningFactor = calculateFactor(sse, lastSSE, learningFactor);
+
+            System.out.println("SSE = " + sse + "LA = " + learningFactor);
+
         }
+    }
+
+    private BackPropagationWeightStorage createStorage(final NeuralNetwork neuralNetwork){
+        BackPropagationWeightStorage.Builder builder = new BackPropagationWeightStorage.Builder();
+        builder.createFrom(neuralNetwork);
+
+        return builder.build();
+    }
+
+    private BackPropagationWeightStorage readWags(final NeuralNetwork neuralNetwork, final BackPropagationWeightStorage storage){
+        storage.read(neuralNetwork);
+
+        return storage;
     }
 
     private void teach(final NeuralNetwork neuralNetwork, final EpochData epochData, int teachDataCount, double learningAspect) {
         List<Integer> permutation = generatePermutation(0, teachDataCount);
 
         for (int i = 0; i < teachDataCount; i++) {
-            propagate(neuralNetwork, epochData, learningAspect, permutation, i);
+            propagate(neuralNetwork, epochData, learningAspect, permutation.get(i));
         }
     }
 
@@ -90,8 +110,7 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         return errorSum;
     }
 
-    private void propagate(NeuralNetwork neuralNetwork, EpochData epochData, double learningAspect, List<Integer> permutation, int i) {
-        Integer dataIndexToProcess = permutation.get(i);
+    private void propagate(NeuralNetwork neuralNetwork, EpochData epochData, double learningAspect,Integer dataIndexToProcess) {
         TeachData singleTeachData = epochData.getElement(dataIndexToProcess);
 
         propagate(singleTeachData, neuralNetwork, learningAspect);
@@ -108,7 +127,10 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         double[] currentOutputs = neuralNetwork.getOutput();
 
         double error = calculateLastLayerError(singleTeachData, neuralNetwork, layersCount, currentOutputs);
-        modifyWags(neuralNetwork, learningAspect, layersCount, error);
+
+        readWags(neuralNetwork, tempOldWeightStorage);
+        modifyWags(neuralNetwork, learningAspect, layersCount, error, oldWeightStorage);
+        oldWeightStorage = tempOldWeightStorage.clone();
     }
 
     private double calculateLastLayerError(TeachData singleTeachData, NeuralNetwork neuralNetwork, int layersCount, double[] currentOutputs) {
@@ -118,31 +140,23 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         for (int i = 0; i < lastLayer.getNeuronsCount(); i++) {
             double expected = expectedOutputs[i];
             double currentOutput = currentOutputs[i];
-            Neuron neuronToPropagate = lastLayer.getNeuron(i);
-            error = (expected - currentOutput);
+            error += (expected - currentOutput);
         }
 
         return error;
     }
 
-    private double[] getWagsPerInputNumber(final Layer layer, int neuronsCount, int inputNumber) {
-        double[] wags = new double[neuronsCount];
-        for (int i = 0; i < neuronsCount; i++) {
-            wags[i] = layer.getNeuron(i).getWag(inputNumber);
-        }
-        return wags;
-    }
-
-    private void modifyWags(NeuralNetwork neuralNetwork, double learningAspect, int layersCount, double error) {
+    private void modifyWags(NeuralNetwork neuralNetwork, double learningAspect, int layersCount, double error, final BackPropagationWeightStorage oldWeightStorage) {
         for (int i = layersCount - 1; i > 0; i--) {
             Layer previous = neuralNetwork.getLayer(i - 1);
             Layer layer = neuralNetwork.getLayer(i);
+            Double[][] oldWags = oldWeightStorage.get(i);
 
-            modifyWags(learningAspect, error, previous, layer);
+            modifyWags(learningAspect, error, previous, layer, oldWags);
         }
     }
 
-    private void modifyWags(double learningAspect, double error, final Layer previous, final Layer current) {
+    private void modifyWags(double learningAspect, double error, final Layer previous, final Layer current, Double[][] oldWags ) {
         for (int i = 0; i < current.getNeuronsCount(); i++) {
             for (int j = 0; j < previous.getNeuronsCount(); j++) {
                 Neuron previousNeuron = previous.getNeuron(j);
@@ -151,7 +165,10 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
                 double currentNeuronDerivativeValue = currentNeuron.getInputDerivativeValue();
                 double newWagCalculated = learningAspect *  error * previousNeuronValue * currentNeuronDerivativeValue;
                 double oldWag = currentNeuron.getWag(j);
-                current.getNeuron(i).setWag(j, oldWag + newWagCalculated);
+                double preOldWag = oldWags[i][j];
+                double newWagWithMomentum =  oldWag + newWagCalculated + ( 0.7 * (oldWag - preOldWag));
+
+                current.getNeuron(i).setWag(j, newWagWithMomentum);
             }
         }
     }

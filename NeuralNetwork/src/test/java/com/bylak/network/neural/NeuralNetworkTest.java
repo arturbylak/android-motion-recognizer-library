@@ -89,12 +89,12 @@ public class NeuralNetworkTest {
     }
 
     //Run manually - long
-    //  @Test
+   // @Test
     public void testXor() {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
 
-        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 0.01d);
+        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d);
 
         //when
         neuralNetwork.teach(xorEpochData, configuration);
@@ -114,7 +114,7 @@ public class NeuralNetworkTest {
     }
 
     //Run manually - long
-    // @Test
+    //@Test
     public void testSSE() {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
@@ -177,4 +177,5 @@ public class NeuralNetworkTest {
 
         return output[0];
     }
+
 }
