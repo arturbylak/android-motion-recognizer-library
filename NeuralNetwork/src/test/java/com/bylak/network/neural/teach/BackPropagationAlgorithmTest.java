@@ -1,10 +1,7 @@
 package com.bylak.network.neural.teach;
 
 import com.bylak.network.layer.Layer;
-import com.bylak.network.neural.NeuralNetwork;
-import com.bylak.network.neural.Neuron;
-import com.bylak.network.neural.NeuronImpl;
-import com.bylak.network.neural.TestActivationFunction;
+import com.bylak.network.neural.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,9 +23,10 @@ public class BackPropagationAlgorithmTest {
         Layer inputLayer = new Layer.Builder()
                 .addNeuron(new NeuronImpl(new double[]{1}, 1, activationFunction))
                 .addNeuron(new NeuronImpl(new double[]{2}, 1, activationFunction))
+                .addNeuron(Bias.createBias(activationFunction))
                 .build();
         Layer outputLayer = new Layer.Builder()
-                .addNeuron(new NeuronImpl(new double[]{3, 1}, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[]{3, 1, 1}, 1, activationFunction))
                 .build();
 
         neuralNetwork.addLayer(inputLayer);
@@ -43,9 +41,9 @@ public class BackPropagationAlgorithmTest {
         neuralNetwork.setInputs(input);
         neuralNetwork.simulate();
 
-        double expectedOutput = -2.0d;
+        double expectedOutput = -7.0d;
         double actualOutput = neuralNetwork.getOutput()[0];
-        double[] expectedWag = {1.0d, -3.0d};
+        double[] expectedWag = {0.0d, -5.0d, -2.0d};
         Neuron outputNeuron = outputLayer.getNeuron(0);
 
         //then
