@@ -39,7 +39,7 @@ public class BackPropagationAlgorithmTest {
                 .build();
 
         //when
-        neuralNetwork.teach(epochData, new TeachConfiguration(0.0001, 1, 1));
+        neuralNetwork.teach(epochData, new TeachConfiguration(0.0001, 1, 1,  0));
         neuralNetwork.setInputs(input);
         neuralNetwork.simulate();
 

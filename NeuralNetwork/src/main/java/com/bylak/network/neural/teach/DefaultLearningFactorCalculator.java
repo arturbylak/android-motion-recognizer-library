@@ -14,12 +14,13 @@ public class DefaultLearningFactorCalculator implements LeaningFactorCalculator{
 
     @Override
     public double calculate(double currentSSE, double lastSSE, double lastLearningFactor) {
+        double learningFactor = 0;
         if(currentSSE - (KW * lastSSE) > 0){
-            lastLearningFactor = lastLearningFactor * PD;
+            learningFactor = lastLearningFactor * PD;
         }else{
-            lastLearningFactor = lastLearningFactor * PI;
+            learningFactor = lastLearningFactor * PI;
         }
 
-        return lastLearningFactor;
+        return learningFactor;
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
  * Time: 10:49
  * To change this template use File | Settings | File Templates.
  */
-public final class BackPropagationWeightStorage {
+public final class BackPropagationWeightStorage implements Cloneable {
 
     private final List<Double[][]> wags;
 
@@ -93,9 +93,9 @@ public final class BackPropagationWeightStorage {
         }
 
         public Builder addLayer(int neuronCount, int neuronInputs) {
-            Double[][] wags = new Double[neuronCount][neuronInputs];
-            wags = ArrayUtil.clear(wags);
-            this.wags.add(wags);
+            Double[][] localWags = new Double[neuronCount][neuronInputs];
+            localWags = ArrayUtil.clear(localWags);
+            this.wags.add(localWags);
 
             return this;
         }

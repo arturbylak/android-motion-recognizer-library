@@ -94,7 +94,7 @@ public class NeuralNetworkTest {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
 
-        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d);
+        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
         //when
         neuralNetwork.teach(xorEpochData, configuration);
@@ -119,7 +119,7 @@ public class NeuralNetworkTest {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
         double maxErrorValue = 0.2d;
-        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1);
+        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1, 0.7d);
         double errorSum = 0;
 
         //when

@@ -58,7 +58,7 @@ public final class NeuralNetwork {
 
     public void setInputs(double[] values) {
         Layer inputLayer = getLayer(0);
-        for (int i = 0; i < getNeuronCountWithoutBias(); i++) {
+        for (int i = 0; i < getInputCount(); i++) {
             Neuron inputNeuron = inputLayer.getNeuron(i);
             double input = values[i];
             inputNeuron.setValue(input);
