@@ -89,7 +89,7 @@ public class NeuralNetworkTest {
     }
 
     //Run manually - long
-   // @Test
+    @Test
     public void testXor() {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();
@@ -114,7 +114,7 @@ public class NeuralNetworkTest {
     }
 
     //Run manually - long
-    //@Test
+    @Test
     public void testSSE() {
         //given
         NeuralNetwork neuralNetwork = getXORNeuralNetwork();

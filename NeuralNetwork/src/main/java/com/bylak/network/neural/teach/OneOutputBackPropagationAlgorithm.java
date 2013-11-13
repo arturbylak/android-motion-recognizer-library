@@ -44,14 +44,14 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         }
     }
 
-    private BackPropagationWeightStorage createStorage(final NeuralNetwork neuralNetwork){
+    private BackPropagationWeightStorage createStorage(final NeuralNetwork neuralNetwork) {
         BackPropagationWeightStorage.Builder builder = new BackPropagationWeightStorage.Builder();
         builder.createFrom(neuralNetwork);
 
         return builder.build();
     }
 
-    private BackPropagationWeightStorage readWags(final NeuralNetwork neuralNetwork, final BackPropagationWeightStorage storage){
+    private BackPropagationWeightStorage readWags(final NeuralNetwork neuralNetwork, final BackPropagationWeightStorage storage) {
         storage.read(neuralNetwork);
 
         return storage;
@@ -93,14 +93,14 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         return Math.sqrt(sse);
     }
 
-    private double calculateFactor( double sse, double lastSSE, double learningAspect) {
+    private double calculateFactor(double sse, double lastSSE, double learningAspect) {
         return learningFactorCalculator.calculate(sse, lastSSE, learningAspect);
     }
 
     private double getOutputError(double[] results, double[] expectedDatas) {
         double errorSum = 0;
 
-        for(int i=0; i<results.length; i++){
+        for (int i = 0; i < results.length; i++) {
             double diff = results[i] - expectedDatas[i];
             errorSum += diff;
         }
@@ -124,47 +124,74 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         neuralNetwork.simulate();
         double[] currentOutputs = neuralNetwork.getOutput();
 
-        double error = calculateLastLayerError(singleTeachData, neuralNetwork, layersCount, currentOutputs);
+        double[][] error = calculateError(singleTeachData, neuralNetwork, currentOutputs);
 
         readWags(neuralNetwork, tempOldWeightStorage);
         modifyWags(neuralNetwork, learningAspect, momentumFactor, layersCount, error);
         oldWeightStorage = tempOldWeightStorage.clone();
     }
 
-    private double calculateLastLayerError(TeachData singleTeachData, NeuralNetwork neuralNetwork, int layersCount, double[] currentOutputs) {
+    //TODO refactor
+    private double[][] calculateError(TeachData singleTeachData, NeuralNetwork neuralNetwork, double[] currentOutputs) {
+        int layersCount = neuralNetwork.getLayersCount();
+        double[][] errors = new double[layersCount][];
+        for (int i = 0; i < layersCount; i++) {
+            Layer layer = neuralNetwork.getLayer(i);
+            int neuronsInLayer = layer.getNeuronsCount();
+            errors[i] = new double[neuronsInLayer];
+        }
+
         Layer lastLayer = neuralNetwork.getLayer(layersCount - 1);
         double error = 0;
         double[] expectedOutputs = singleTeachData.getExpectedOutput();
         for (int i = 0; i < lastLayer.getNeuronsCount(); i++) {
             double expected = expectedOutputs[i];
             double currentOutput = currentOutputs[i];
-            error += (expected - currentOutput);
+            error += expected - currentOutput;
         }
 
-        return error;
+        errors[layersCount - 1][0] = error;
+
+        for (int i = layersCount - 2; i > 0; i--) {
+            Layer layer = neuralNetwork.getLayer(i);
+            Layer nextLayer = neuralNetwork.getLayer(i + 1);
+
+            for (int j = 0; j < layer.getNeuronsCount(); j++) {
+                double localError = 0;
+                for (int k = 0; k < nextLayer.getNeuronsCount(); k++) {
+                     Neuron neuron = nextLayer.getNeuron(k);
+                     double neuronWag = neuron.getWag(j);
+                     localError += errors[i + 1][k] * neuronWag;
+                }
+
+                errors[i][j] = localError;
+            }
+        }
+
+        return errors;
     }
 
-    private void modifyWags(NeuralNetwork neuralNetwork, double learningAspect, double momentumFactor,  int layersCount, double error) {
+    private void modifyWags(NeuralNetwork neuralNetwork, double learningAspect, double momentumFactor, int layersCount, double[][] errors) {
         for (int i = layersCount - 1; i > 0; i--) {
             Layer previous = neuralNetwork.getLayer(i - 1);
             Layer layer = neuralNetwork.getLayer(i);
             Double[][] oldWags = oldWeightStorage.get(i);
 
-            modifyWags(learningAspect, momentumFactor, error, previous, layer, oldWags);
+            modifyWags(learningAspect, momentumFactor, errors[i], previous, layer, oldWags);
         }
     }
 
-    private void modifyWags(double learningAspect, double momentumFactor, double error, final Layer previous, final Layer current, Double[][] oldWags ) {
+    private void modifyWags(double learningAspect, double momentumFactor, double[] errors, final Layer previous, final Layer current, Double[][] oldWags) {
         for (int i = 0; i < current.getNeuronsCount(); i++) {
             for (int j = 0; j < previous.getNeuronsCount(); j++) {
                 Neuron previousNeuron = previous.getNeuron(j);
                 double previousNeuronValue = previousNeuron.getValue();
                 Neuron currentNeuron = current.getNeuron(i);
                 double currentNeuronDerivativeValue = currentNeuron.getInputDerivativeValue();
-                double newWagCalculated = learningAspect *  error * previousNeuronValue * currentNeuronDerivativeValue;
+                double newWagCalculated = learningAspect * errors[i] * previousNeuronValue * currentNeuronDerivativeValue;
                 double oldWag = currentNeuron.getWag(j);
                 double preOldWag = oldWags[i][j];
-                double newWagWithMomentum =  oldWag + newWagCalculated + (momentumFactor * (oldWag - preOldWag));
+                double newWagWithMomentum = oldWag + newWagCalculated + (momentumFactor * (oldWag - preOldWag));
 
                 current.getNeuron(i).setWag(j, newWagWithMomentum);
             }
