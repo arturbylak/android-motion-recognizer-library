@@ -15,7 +15,7 @@ public final class NeuralNetworkFactory {
     private  NeuralNetworkFactory() {
     }
 
-    public static final NeuralNetwork createNetwork(int inputCount, int inputLayerCount, int hiddenLayerCount, int outputLayerCount, final ActivationFunction activationFunction) {
+    public static NeuralNetwork createNetwork(int inputCount, int inputLayerCount, int hiddenLayerCount, int outputLayerCount, final ActivationFunction activationFunction) {
         NeuralNetwork neuralNetwork = new NeuralNetwork();
 
         Layer inputLayer = createLayer(inputCount, inputLayerCount, activationFunction, true);

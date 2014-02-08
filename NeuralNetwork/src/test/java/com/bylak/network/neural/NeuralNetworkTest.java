@@ -18,21 +18,21 @@ import org.junit.Test;
  */
 public class NeuralNetworkTest {
 
-    private static final EpochData xorEpochData;
-    private static final EpochData orEpochData;
+    private static final EpochData XOR_EPOCH_DATA;
+    private static final EpochData OR_EPOCH_DATA;
     private static final EpochData zero;
     private static final EpochData zero2;
     private static final EpochData zero3;
 
     static {
-        xorEpochData = new EpochData.Builder()
+        XOR_EPOCH_DATA = new EpochData.Builder()
                 .add(new TeachData(new double[]{0, 0}, new double[]{0}))
                 .add(new TeachData(new double[]{0, 1}, new double[]{1}))
                 .add(new TeachData(new double[]{1, 0}, new double[]{1}))
                 .add(new TeachData(new double[]{1, 1}, new double[]{0}))
                 .build();
 
-        orEpochData = new EpochData.Builder()
+        OR_EPOCH_DATA = new EpochData.Builder()
                 .add(new TeachData(new double[]{0, 0}, new double[]{0}))
                 .add(new TeachData(new double[]{0, 1}, new double[]{1}))
                 .add(new TeachData(new double[]{1, 0}, new double[]{1}))
@@ -88,7 +88,6 @@ public class NeuralNetworkTest {
         Assert.assertTrue(simulateResult[0] == expectedValue);
     }
 
-    //Run manually - long
     @Test
     public void testXor() {
         //given
@@ -97,7 +96,7 @@ public class NeuralNetworkTest {
         TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
         //when
-        neuralNetwork.teach(xorEpochData, configuration);
+        neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
 
         //then
         double output = simulate(neuralNetwork, new double[]{0, 0});
@@ -113,7 +112,30 @@ public class NeuralNetworkTest {
         Assert.assertEquals(0, output, 0.1d);
     }
 
-    //Run manually - long
+    @Test
+    public void testOR() {
+        //given
+        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+
+        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
+
+        //when
+        neuralNetwork.teach(OR_EPOCH_DATA, configuration);
+
+        //then
+        double output = simulate(neuralNetwork, new double[]{0, 0});
+        Assert.assertEquals(0, output, 0.1d);
+
+        output = simulate(neuralNetwork, new double[]{0, 1});
+        Assert.assertEquals(1,output,  0.1d);
+
+        output = simulate(neuralNetwork, new double[]{1, 0});
+        Assert.assertEquals(1, output,  0.1d);
+
+        output = simulate(neuralNetwork, new double[]{1, 1});
+        Assert.assertEquals(1, output, 0.1d);
+    }
+
     @Test
     public void testSSE() {
         //given
@@ -123,7 +145,7 @@ public class NeuralNetworkTest {
         double errorSum = 0;
 
         //when
-        neuralNetwork.teach(xorEpochData, configuration);
+        neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
         double output = simulate(neuralNetwork, new double[]{0, 0});
         errorSum =+ output - 0;
 
