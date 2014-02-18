@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>NeuralNetwork</module>
+        <module>neural-network</module>
         <module>android-motion-recognizer</module>
     </modules>
 
