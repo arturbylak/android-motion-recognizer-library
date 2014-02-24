@@ -19,11 +19,15 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
 
     public static final int PERMUTATION_START_INDEX = 0;
     private final LeaningFactorCalculator learningFactorCalculator;
+    private final SSECalculator sseCalculator;
+    private final PermutationGenerator permutationGenerator;
     private BackPropagationWeightStorage oldWeightStorage;
     private BackPropagationWeightStorage tempOldWeightStorage;
 
     public OneOutputBackPropagationAlgorithm() {
         this.learningFactorCalculator = new DefaultLearningFactorCalculator();
+        this.sseCalculator = new SSECalculator();
+        this.permutationGenerator = new PermutationGenerator();
     }
 
     @Override
@@ -63,26 +67,21 @@ public final class OneOutputBackPropagationAlgorithm implements NeutralNetworkTe
         List<Integer> permutation = generatePermutation(PERMUTATION_START_INDEX, teachDataCount);
 
         for (int i = 0; i < teachDataCount; i++) {
-            propagate(neuralNetwork, epochData, learningAspect, momentumFactor, permutation.get(i));
+            TeachData singleTeachData = epochData.getElement(permutation.get(i));
+            propagate(singleTeachData, neuralNetwork, learningAspect, momentumFactor);
         }
     }
 
     private List<Integer> generatePermutation(int startIndex, int stopIndex) {
-        return new PermutationGenerator().generatePermutation(startIndex, stopIndex);
+        return permutationGenerator.generatePermutation(startIndex, stopIndex);
     }
 
     private double getCurrentSSE(final NeuralNetwork neuralNetwork, final EpochData epochData) {
-       return new SSECalculator().calculateCurrentSSE(neuralNetwork, epochData);
+       return sseCalculator.calculateCurrentSSE(neuralNetwork, epochData);
     }
 
     private double calculateFactor(double sse, double lastSSE, double learningAspect) {
         return learningFactorCalculator.calculate(sse, lastSSE, learningAspect);
-    }
-
-    private void propagate(NeuralNetwork neuralNetwork, EpochData epochData, double learningAspect, double momentumFactor, Integer dataIndexToProcess) {
-        TeachData singleTeachData = epochData.getElement(dataIndexToProcess);
-
-        propagate(singleTeachData, neuralNetwork, learningAspect, momentumFactor);
     }
 
     private void propagate(final TeachData singleTeachData, final NeuralNetwork neuralNetwork, final double learningAspect, double momentumFactor) {
