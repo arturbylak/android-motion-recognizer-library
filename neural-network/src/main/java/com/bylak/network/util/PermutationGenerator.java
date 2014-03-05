@@ -11,8 +11,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class PermutationGenerator {
-    public List<Integer> generatePermutation(int startIndex, int stopIndex) {
-        List<Integer> permutation = new ArrayList<>();
+    public List<Integer> generatePermutation(final int startIndex, final int stopIndex) {
+        final List<Integer> permutation = new ArrayList<>();
 
         for (int i = startIndex; i < stopIndex; i++) {
             permutation.add(i);

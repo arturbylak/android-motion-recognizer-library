@@ -1,7 +1,8 @@
 package com.bylak.network.util;
 
-import com.bylak.network.exception.AggregatedException;
 import org.junit.Test;
+
+import com.bylak.network.exception.AggregatedException;
 
 /**
  * Created with IntelliJ IDEA.

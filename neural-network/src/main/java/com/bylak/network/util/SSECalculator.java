@@ -15,26 +15,26 @@ public final class SSECalculator {
     public double calculateCurrentSSE(final NeuralNetwork neuralNetwork, final EpochData epochData) {
         double sse = 0;
         for (int i = 0; i < epochData.getSize(); i++) {
-            TeachData teachData = epochData.getElement(i);
+            final TeachData teachData = epochData.getElement(i);
             neuralNetwork.setInputs(teachData.getInput());
 
             neuralNetwork.simulate();
 
-            double[] simulationResult = neuralNetwork.getOutput();
-            double[] expectedOutput = teachData.getExpectedOutput();
+            final double[] simulationResult = neuralNetwork.getOutput();
+            final double[] expectedOutput = teachData.getExpectedOutput();
 
-            double error = getOutputError(simulationResult, expectedOutput);
+            final double error = getOutputError(simulationResult, expectedOutput);
             sse += Math.pow(error, 2);
         }
 
         return Math.sqrt(sse);
     }
 
-    private double getOutputError(double[] results, double[] expectedData) {
+    private double getOutputError(final double[] results, final double[] expectedData) {
         double errorSum = 0;
 
         for (int i = 0; i < results.length; i++) {
-            double diff = results[i] - expectedData[i];
+            final double diff = results[i] - expectedData[i];
             errorSum += diff;
         }
 

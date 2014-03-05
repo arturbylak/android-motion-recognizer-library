@@ -13,7 +13,7 @@ public final class MotionType {
 
     public static final int UNKNOWN = -1;
 
-    public MotionType(int id, final String name) {
+    public MotionType(final int id, final String name) {
         this.id = id;
         this.name = name;
     }

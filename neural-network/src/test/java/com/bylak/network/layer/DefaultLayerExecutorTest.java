@@ -1,6 +1,7 @@
 package com.bylak.network.layer;
 
-import com.bylak.network.util.ArrayListBuilder;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -8,7 +9,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.List;
+import com.bylak.network.util.ArrayListBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,23 +23,23 @@ import java.util.List;
 public class DefaultLayerExecutorTest {
     @Test
     public void testExecute() throws Exception {
-        //given
-        LayerExecutor layerExecutor = new DefaultLayerExecutor();
+        // given
+        final LayerExecutor layerExecutor = new DefaultLayerExecutor();
 
         final Layer inputLayer = PowerMockito.mock(Layer.class);
         final Layer hiddenLayer = PowerMockito.mock(Layer.class);
         final Layer outputLayer = PowerMockito.mock(Layer.class);
 
-        List<Layer> layers = new ArrayListBuilder<Layer>()
+        final List<Layer> layers = new ArrayListBuilder<Layer>()
                 .add(inputLayer)
                 .add(hiddenLayer)
                 .add(outputLayer)
                 .build();
 
-        //when
+        // when
         layerExecutor.execute(layers);
 
-        //then
+        // then
         Mockito.verify(hiddenLayer).processLayer(inputLayer);
         Mockito.verify(outputLayer).processLayer(hiddenLayer);
     }

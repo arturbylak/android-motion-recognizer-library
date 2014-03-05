@@ -11,13 +11,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class ArrayListBuilder<T> {
-    private List<T> list;
+    private final List<T> list;
 
     public ArrayListBuilder() {
         this.list = new ArrayList<T>();
     }
 
-    public ArrayListBuilder<T> add(T element) {
+    public ArrayListBuilder<T> add(final T element) {
         this.list.add(element);
 
         return this;

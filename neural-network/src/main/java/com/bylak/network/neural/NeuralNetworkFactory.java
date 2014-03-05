@@ -12,15 +12,17 @@ import com.bylak.network.layer.Layer;
  */
 public final class NeuralNetworkFactory {
 
-    private  NeuralNetworkFactory() {
+    private NeuralNetworkFactory() {
     }
 
-    public static NeuralNetwork createNetwork(int inputCount, int inputLayerCount, int hiddenLayerCount, int outputLayerCount, final ActivationFunction activationFunction) {
-        NeuralNetwork neuralNetwork = new NeuralNetwork();
+    public static NeuralNetwork createNetwork(final int inputCount, final int inputLayerCount,
+            final int hiddenLayerCount,
+            final int outputLayerCount, final ActivationFunction activationFunction) {
+        final NeuralNetwork neuralNetwork = new NeuralNetwork();
 
-        Layer inputLayer = createLayer(inputCount, inputLayerCount, activationFunction, true);
-        Layer hiddenLayer = createLayer(inputLayerCount, hiddenLayerCount, activationFunction, true);
-        Layer outputLayer = createLayer(hiddenLayerCount, outputLayerCount, activationFunction, false);
+        final Layer inputLayer = createLayer(inputCount, inputLayerCount, activationFunction, true);
+        final Layer hiddenLayer = createLayer(inputLayerCount, hiddenLayerCount, activationFunction, true);
+        final Layer outputLayer = createLayer(hiddenLayerCount, outputLayerCount, activationFunction, false);
 
         neuralNetwork.addLayer(inputLayer);
         neuralNetwork.addLayer(hiddenLayer);
@@ -29,13 +31,15 @@ public final class NeuralNetworkFactory {
         return neuralNetwork;
     }
 
-    private static Layer createLayer(int inputCount, int inputLayerCount, ActivationFunction activationFunction, boolean bias) {
-        Layer.Builder builder = new Layer.Builder();
+    private static Layer createLayer(final int inputCount, final int inputLayerCount,
+            final ActivationFunction activationFunction,
+            final boolean bias) {
+        final Layer.Builder builder = new Layer.Builder();
         for (int i = 0; i < inputLayerCount; i++) {
             builder.addNeuron(NeuronImpl.createNeuron(inputCount, activationFunction));
         }
 
-        if(bias){
+        if (bias) {
             builder.addNeuron(Bias.createBias(activationFunction));
         }
 

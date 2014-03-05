@@ -25,7 +25,7 @@ public final class EpochData {
         return teachData.size();
     }
 
-    public TeachData getElement(int elementIndex) {
+    public TeachData getElement(final int elementIndex) {
         return teachData.get(elementIndex);
     }
 

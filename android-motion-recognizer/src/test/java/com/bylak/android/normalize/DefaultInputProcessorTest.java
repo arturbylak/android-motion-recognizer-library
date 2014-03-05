@@ -13,16 +13,16 @@ import org.junit.Test;
 public class DefaultInputProcessorTest {
     @Test
     public void testProcessInputResize() throws Exception {
-        //given
-        InputProcessor inputProcessor = new DefaultInputProcessor();
-        int expectedOutSize = 4;
-        float[] valuesToResize = new float[]{1, 2};
-        double[] expected = new double[]{0, 0.5, 1, 1};
+        // given
+        final InputProcessor inputProcessor = new DefaultInputProcessor();
+        final int expectedOutSize = 4;
+        final float[] valuesToResize = new float[] { 1, 2 };
+        final double[] expected = new double[] { 0, 0.5, 1, 1 };
 
-        //when
-        double[] result = inputProcessor.processInput(expectedOutSize, valuesToResize);
+        // when
+        final double[] result = inputProcessor.processInput(expectedOutSize, valuesToResize);
 
-        //then
+        // then
         for (int i = 0; i < result.length; i++) {
             Assert.assertEquals(expected[i], result[i], 0.01d);
         }
@@ -30,16 +30,16 @@ public class DefaultInputProcessorTest {
 
     @Test
     public void testProcessInputNoChangeSize() throws Exception {
-        //given
-        InputProcessor inputProcessor = new DefaultInputProcessor();
-        int expectedOutSize = 2;
-        float[] valuesToResize = new float[]{1, 2};
-        double[] expected = new double[]{0, 1};
+        // given
+        final InputProcessor inputProcessor = new DefaultInputProcessor();
+        final int expectedOutSize = 2;
+        final float[] valuesToResize = new float[] { 1, 2 };
+        final double[] expected = new double[] { 0, 1 };
 
-        //when
-        double[] result = inputProcessor.processInput(expectedOutSize, valuesToResize);
+        // when
+        final double[] result = inputProcessor.processInput(expectedOutSize, valuesToResize);
 
-        //then
+        // then
         for (int i = 0; i < result.length; i++) {
             Assert.assertEquals(expected[i], result[i], 0.01d);
         }
@@ -47,16 +47,16 @@ public class DefaultInputProcessorTest {
 
     @Test
     public void testProcessInputCut() throws Exception {
-        //given
-        InputProcessor inputProcessor = new DefaultInputProcessor();
-        int expectedOutSize = 2;
-        float[] valuesToCut = new float[]{0f, 0.5f, 1f, 1f};
-        double[] expected = new double[]{0, 1};
+        // given
+        final InputProcessor inputProcessor = new DefaultInputProcessor();
+        final int expectedOutSize = 2;
+        final float[] valuesToCut = new float[] { 0f, 0.5f, 1f, 1f };
+        final double[] expected = new double[] { 0, 1 };
 
-        //when
-        double[] result = inputProcessor.processInput(expectedOutSize, valuesToCut);
+        // when
+        final double[] result = inputProcessor.processInput(expectedOutSize, valuesToCut);
 
-        //then
+        // then
         for (int i = 0; i < result.length; i++) {
             Assert.assertEquals(expected[i], result[i], 0.01d);
         }

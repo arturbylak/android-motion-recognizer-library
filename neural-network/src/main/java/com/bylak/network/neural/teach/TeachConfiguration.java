@@ -13,7 +13,8 @@ public final class TeachConfiguration {
     private final double learningFactor;
     private final double momentumFactor;
 
-    public TeachConfiguration(final double maxErrorValue, final int epochCount, final double learningFactor, final double momentumFactor) {
+    public TeachConfiguration(final double maxErrorValue, final int epochCount, final double learningFactor,
+            final double momentumFactor) {
         this.maxErrorValue = maxErrorValue;
         this.epochCount = epochCount;
         this.learningFactor = learningFactor;

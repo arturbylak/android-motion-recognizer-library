@@ -1,13 +1,14 @@
 package com.bylak.network.neural;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.bylak.network.function.ActivationFunction;
 import com.bylak.network.function.SigmoidActivationFunction;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.teach.EpochData;
 import com.bylak.network.neural.teach.TeachConfiguration;
 import com.bylak.network.neural.teach.TeachData;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,154 +27,154 @@ public class NeuralNetworkTest {
 
     static {
         XOR_EPOCH_DATA = new EpochData.Builder()
-                .add(new TeachData(new double[]{0, 0}, new double[]{0}))
-                .add(new TeachData(new double[]{0, 1}, new double[]{1}))
-                .add(new TeachData(new double[]{1, 0}, new double[]{1}))
-                .add(new TeachData(new double[]{1, 1}, new double[]{0}))
+                .add(new TeachData(new double[] { 0, 0 }, new double[] { 0 }))
+                .add(new TeachData(new double[] { 0, 1 }, new double[] { 1 }))
+                .add(new TeachData(new double[] { 1, 0 }, new double[] { 1 }))
+                .add(new TeachData(new double[] { 1, 1 }, new double[] { 0 }))
                 .build();
 
         OR_EPOCH_DATA = new EpochData.Builder()
-                .add(new TeachData(new double[]{0, 0}, new double[]{0}))
-                .add(new TeachData(new double[]{0, 1}, new double[]{1}))
-                .add(new TeachData(new double[]{1, 0}, new double[]{1}))
-                .add(new TeachData(new double[]{1, 1}, new double[]{1}))
+                .add(new TeachData(new double[] { 0, 0 }, new double[] { 0 }))
+                .add(new TeachData(new double[] { 0, 1 }, new double[] { 1 }))
+                .add(new TeachData(new double[] { 1, 0 }, new double[] { 1 }))
+                .add(new TeachData(new double[] { 1, 1 }, new double[] { 1 }))
                 .build();
 
         zero = new EpochData.Builder()
-                .add(new TeachData(new double[]{0}, new double[]{0}))
+                .add(new TeachData(new double[] { 0 }, new double[] { 0 }))
                 .build();
 
         zero2 = new EpochData.Builder()
-                .add(new TeachData(new double[]{1, 1, 1, 1}, new double[]{1}))
+                .add(new TeachData(new double[] { 1, 1, 1, 1 }, new double[] { 1 }))
                 .build();
         zero3 = new EpochData.Builder()
-                .add(new TeachData(new double[]{1, 0}, new double[]{0}))
+                .add(new TeachData(new double[] { 1, 0 }, new double[] { 0 }))
 
                 .build();
     }
 
     @Test
     public void testSimulate() throws Exception {
-        //given
-        NeuralNetwork neuralNetwork = new NeuralNetwork();
+        // given
+        final NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
 
-        Layer inputLayer = new Layer.Builder()
-                .addNeuron(new NeuronImpl(new double[]{1}, 1, activationFunction))
-                .addNeuron(new NeuronImpl(new double[]{2}, 1, activationFunction))
+        final Layer inputLayer = new Layer.Builder()
+                .addNeuron(new NeuronImpl(new double[] { 1 }, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[] { 2 }, 1, activationFunction))
                 .build();
 
-        Layer hiddenLayer = new Layer.Builder()
-                .addNeuron(new NeuronImpl(new double[]{1, 2}, 1, activationFunction))
-                .addNeuron(new NeuronImpl(new double[]{3, 4}, 1, activationFunction))
+        final Layer hiddenLayer = new Layer.Builder()
+                .addNeuron(new NeuronImpl(new double[] { 1, 2 }, 1, activationFunction))
+                .addNeuron(new NeuronImpl(new double[] { 3, 4 }, 1, activationFunction))
                 .build();
 
-        Layer outputLayer = new Layer.Builder()
-                .addNeuron(new NeuronImpl(new double[]{3, 1}, 1, activationFunction))
+        final Layer outputLayer = new Layer.Builder()
+                .addNeuron(new NeuronImpl(new double[] { 3, 1 }, 1, activationFunction))
                 .build();
 
         neuralNetwork.addLayer(inputLayer);
         neuralNetwork.addLayer(hiddenLayer);
         neuralNetwork.addLayer(outputLayer);
 
-        int expectedLength = 1;
-        int expectedValue = 16;
+        final int expectedLength = 1;
+        final int expectedValue = 16;
 
-        //when
+        // when
         neuralNetwork.simulate();
-        double[] simulateResult = neuralNetwork.getOutput();
+        final double[] simulateResult = neuralNetwork.getOutput();
 
-        //then
+        // then
         Assert.assertTrue(simulateResult.length == expectedLength);
         Assert.assertTrue(simulateResult[0] == expectedValue);
     }
 
     @Test
     public void testXor() {
-        //given
-        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+        // given
+        final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
 
-        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
+        final TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
-        //when
+        // when
         neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
 
-        //then
-        double output = simulate(neuralNetwork, new double[]{0, 0});
+        // then
+        double output = simulate(neuralNetwork, new double[] { 0, 0 });
         Assert.assertEquals(0, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{0, 1});
-        Assert.assertEquals(1,output,  0.1d);
+        output = simulate(neuralNetwork, new double[] { 0, 1 });
+        Assert.assertEquals(1, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{1, 0});
-        Assert.assertEquals(1, output,  0.1d);
+        output = simulate(neuralNetwork, new double[] { 1, 0 });
+        Assert.assertEquals(1, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{1, 1});
+        output = simulate(neuralNetwork, new double[] { 1, 1 });
         Assert.assertEquals(0, output, 0.1d);
     }
 
     @Test
     public void testOR() {
-        //given
-        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+        // given
+        final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
 
-        TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
+        final TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
-        //when
+        // when
         neuralNetwork.teach(OR_EPOCH_DATA, configuration);
 
-        //then
-        double output = simulate(neuralNetwork, new double[]{0, 0});
+        // then
+        double output = simulate(neuralNetwork, new double[] { 0, 0 });
         Assert.assertEquals(0, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{0, 1});
-        Assert.assertEquals(1,output,  0.1d);
+        output = simulate(neuralNetwork, new double[] { 0, 1 });
+        Assert.assertEquals(1, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{1, 0});
-        Assert.assertEquals(1, output,  0.1d);
+        output = simulate(neuralNetwork, new double[] { 1, 0 });
+        Assert.assertEquals(1, output, 0.1d);
 
-        output = simulate(neuralNetwork, new double[]{1, 1});
+        output = simulate(neuralNetwork, new double[] { 1, 1 });
         Assert.assertEquals(1, output, 0.1d);
     }
 
     @Test
     public void testSSE() {
-        //given
-        NeuralNetwork neuralNetwork = getXORNeuralNetwork();
-        double maxErrorValue = 0.2d;
-        TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1, 0.7d);
+        // given
+        final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
+        final double maxErrorValue = 0.2d;
+        final TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1, 0.7d);
         double errorSum = 0;
 
-        //when
+        // when
         neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
-        double output = simulate(neuralNetwork, new double[]{0, 0});
-        errorSum =+ output - 0;
+        double output = simulate(neuralNetwork, new double[] { 0, 0 });
+        errorSum = +output - 0;
 
-        output = simulate(neuralNetwork, new double[]{0, 1});
-        errorSum =+ output -1;
+        output = simulate(neuralNetwork, new double[] { 0, 1 });
+        errorSum = +output - 1;
 
-        output = simulate(neuralNetwork, new double[]{1, 0});
-        errorSum =+ output -1;
+        output = simulate(neuralNetwork, new double[] { 1, 0 });
+        errorSum = +output - 1;
 
-        output = simulate(neuralNetwork, new double[]{1, 1});
-        errorSum =+ output - 0;
+        output = simulate(neuralNetwork, new double[] { 1, 1 });
+        errorSum = +output - 0;
 
-        //then
+        // then
         Assert.assertTrue(errorSum < maxErrorValue);
     }
 
     private NeuralNetwork getXORNeuralNetwork() {
 
-        NeuralNetwork neuralNetwork = new NeuralNetwork();
+        final NeuralNetwork neuralNetwork = new NeuralNetwork();
         final ActivationFunction activationFunction = new SigmoidActivationFunction();
 
-        Layer inputLayer = new Layer.Builder()
+        final Layer inputLayer = new Layer.Builder()
                 .addNeuron(NeuronImpl.createNeuron(1, activationFunction))
                 .addNeuron(NeuronImpl.createNeuron(1, activationFunction))
                 .addNeuron(Bias.createBias(activationFunction))
                 .build();
 
-        Layer hiddenLayer = new Layer.Builder()
+        final Layer hiddenLayer = new Layer.Builder()
                 .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
                 .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
                 .addNeuron(NeuronImpl.createNeuron(3, activationFunction))
@@ -181,7 +182,7 @@ public class NeuralNetworkTest {
                 .addNeuron(Bias.createBias(activationFunction))
                 .build();
 
-        Layer outputLayer = new Layer.Builder()
+        final Layer outputLayer = new Layer.Builder()
                 .addNeuron(NeuronImpl.createNeuron(5, activationFunction))
                 .build();
 
@@ -195,7 +196,7 @@ public class NeuralNetworkTest {
     private double simulate(final NeuralNetwork neuralNetwork, final double[] inputs) {
         neuralNetwork.setInputs(inputs);
         neuralNetwork.simulate();
-        double[] output = neuralNetwork.getOutput();
+        final double[] output = neuralNetwork.getOutput();
 
         return output[0];
     }

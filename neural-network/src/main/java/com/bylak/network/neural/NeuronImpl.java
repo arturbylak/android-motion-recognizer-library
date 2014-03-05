@@ -1,10 +1,11 @@
 package com.bylak.network.neural;
 
-import com.bylak.network.function.ActivationFunction;
+import java.util.Random;
+
 import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 
-import java.util.Random;
+import com.bylak.network.function.ActivationFunction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,24 +15,24 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public final class NeuronImpl implements Neuron {
-    private RealMatrix wags;
+    private final RealMatrix wags;
     private double neuronValue;
     private double inputsValue;
     private final ActivationFunction activationFunction;
 
-    public NeuronImpl(double[] wags, double neuronValue, final ActivationFunction activationFunction) {
+    public NeuronImpl(final double[] wags, final double neuronValue, final ActivationFunction activationFunction) {
         this.wags = MatrixUtils.createColumnRealMatrix(wags);
         this.neuronValue = neuronValue;
         this.activationFunction = activationFunction;
     }
 
-    public static Neuron createNeuron(int inputCount, final ActivationFunction activationFunction) {
-        Random random = new Random();
-        double wags[] = new double[inputCount];
-        double neuronValue = random.nextDouble();
+    public static Neuron createNeuron(final int inputCount, final ActivationFunction activationFunction) {
+        final Random random = new Random();
+        final double wags[] = new double[inputCount];
+        final double neuronValue = random.nextDouble();
 
         for (int i = 0; i < wags.length; i++) {
-            double newWag = random.nextDouble();
+            final double newWag = random.nextDouble();
             wags[i] = newWag;
         }
 
@@ -44,15 +45,15 @@ public final class NeuronImpl implements Neuron {
     }
 
     @Override
-    public void simulate(RealMatrix inputs) {
-        RealMatrix multiplied = inputs.multiply(wags);
+    public void simulate(final RealMatrix inputs) {
+        final RealMatrix multiplied = inputs.multiply(wags);
         inputsValue = sumFirstRow(multiplied);
         neuronValue = activationFunction.value(inputsValue);
     }
 
-    private double sumFirstRow(RealMatrix matrixToSum) {
+    private double sumFirstRow(final RealMatrix matrixToSum) {
         double sum = 0;
-        for (double value : matrixToSum.getColumn(0)) {
+        for (final double value : matrixToSum.getColumn(0)) {
             sum += value;
         }
 
@@ -60,7 +61,7 @@ public final class NeuronImpl implements Neuron {
     }
 
     @Override
-    public void setValue(double newValue) {
+    public void setValue(final double newValue) {
         this.neuronValue = newValue;
     }
 
@@ -70,12 +71,12 @@ public final class NeuronImpl implements Neuron {
     }
 
     @Override
-    public double getWag(int index) {
+    public double getWag(final int index) {
         return this.wags.getEntry(index, 0);
     }
 
     @Override
-    public void setWag(int index, double value) {
+    public void setWag(final int index, final double value) {
         this.wags.setEntry(index, 0, value);
     }
 }

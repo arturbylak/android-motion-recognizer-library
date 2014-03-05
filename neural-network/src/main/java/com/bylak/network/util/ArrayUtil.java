@@ -9,11 +9,12 @@ package com.bylak.network.util;
  */
 public final class ArrayUtil {
 
-    private ArrayUtil(){};
+    private ArrayUtil() {
+    };
 
-    public static Double[][] clear(final Double[][] array){
-        for(int i=0; i<array.length; i++){
-            for(int j=0; j<array[i].length; j++){
+    public static Double[][] clear(final Double[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
                 array[i][j] = 0.0d;
             }
         }
@@ -21,15 +22,15 @@ public final class ArrayUtil {
         return array;
     }
 
-    public static Double[][] copy(final Double[][] arrayToCopy){
-        Double[][] copyOfArray = new Double[arrayToCopy.length][];
+    public static Double[][] copy(final Double[][] arrayToCopy) {
+        final Double[][] copyOfArray = new Double[arrayToCopy.length][];
 
-        for(int i=0; i<arrayToCopy.length; i++){
-            int arraySize = arrayToCopy[i].length;
+        for (int i = 0; i < arrayToCopy.length; i++) {
+            final int arraySize = arrayToCopy[i].length;
             copyOfArray[i] = new Double[arraySize];
 
-            for(int j=0; j < arraySize; j++){
-                double doubleValue = arrayToCopy[i][j];
+            for (int j = 0; j < arraySize; j++) {
+                final double doubleValue = arrayToCopy[i][j];
                 copyOfArray[i][j] = Double.valueOf(doubleValue);
             }
         }

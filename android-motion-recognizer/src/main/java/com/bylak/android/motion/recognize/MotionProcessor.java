@@ -1,13 +1,14 @@
 package com.bylak.android.motion.recognize;
 
+import java.util.Map;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+
 import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
 import com.bylak.android.util.InputQueue;
 import com.bylak.network.neural.NeuralNetwork;
-
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +26,8 @@ public final class MotionProcessor implements SensorEventListener {
     private final MotionResolver motionResolver;
     private final InputQueue inputQueue;
 
-    public MotionProcessor(final OnRecognizedListener onRecognizedListener, final Map<MotionType, NeuralNetwork> networks, double thresholdValue) {
+    public MotionProcessor(final OnRecognizedListener onRecognizedListener,
+            final Map<MotionType, NeuralNetwork> networks, final double thresholdValue) {
         this.onRecognizedListener = onRecognizedListener;
         this.simulator = new NeuralNetworkSimulator(networks);
         this.motionResolver = new DefaultMotionResolver(thresholdValue);
@@ -33,9 +35,9 @@ public final class MotionProcessor implements SensorEventListener {
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        float[] values = sensorEvent.values;
-        int queueSize = inputQueue.size();
+    public void onSensorChanged(final SensorEvent sensorEvent) {
+        final float[] values = sensorEvent.values;
+        final int queueSize = inputQueue.size();
 
         inputQueue.add(values);
 
@@ -47,10 +49,10 @@ public final class MotionProcessor implements SensorEventListener {
     }
 
     private void processInput() {
-        float[] valuesToProcess = inputQueue.getAllData();
+        final float[] valuesToProcess = inputQueue.getAllData();
 
-        Map<MotionType, Double[]> simulationOutput = simulator.invokeAll(valuesToProcess);
-        MotionType motionType = motionResolver.resolve(simulationOutput);
+        final Map<MotionType, Double[]> simulationOutput = simulator.invokeAll(valuesToProcess);
+        final MotionType motionType = motionResolver.resolve(simulationOutput);
 
         if (motionType.getId() != MOTION_UNKNOWN) {
             onRecognizedListener.onRecognize(motionType);
@@ -58,9 +60,8 @@ public final class MotionProcessor implements SensorEventListener {
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(final Sensor sensor, final int i) {
 
     }
-
 
 }

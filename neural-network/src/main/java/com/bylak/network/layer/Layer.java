@@ -1,11 +1,12 @@
 package com.bylak.network.layer;
 
-import com.bylak.network.neural.Neuron;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bylak.network.neural.Neuron;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,8 +16,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class Layer {
-    private List<Neuron> neurons;
-    private LayerProcessor layerProcessor;
+    private final List<Neuron> neurons;
+    private final LayerProcessor layerProcessor;
 
     private Layer(final List<Neuron> neurons) {
         this.neurons = neurons;
@@ -28,14 +29,14 @@ public final class Layer {
     }
 
     public RealMatrix createNeuronsValuesMatrix() {
-        double[] neuronsValues = createNeuronsValues();
+        final double[] neuronsValues = createNeuronsValues();
 
         return MatrixUtils.createColumnRealMatrix(neuronsValues);
     }
 
     public double[] createNeuronsValues() {
-        int currentNeuronsCount = getNeuronsCount();
-        double[] neuronsValues = new double[currentNeuronsCount];
+        final int currentNeuronsCount = getNeuronsCount();
+        final double[] neuronsValues = new double[currentNeuronsCount];
 
         for (int i = 0; i < currentNeuronsCount; i++) {
             neuronsValues[i] = neurons.get(i).getValue();
@@ -52,7 +53,7 @@ public final class Layer {
         return this.neurons;
     }
 
-    public Neuron getNeuron(int index) {
+    public Neuron getNeuron(final int index) {
         return this.neurons.get(index);
     }
 

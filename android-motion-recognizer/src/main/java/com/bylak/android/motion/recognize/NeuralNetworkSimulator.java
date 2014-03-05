@@ -1,11 +1,11 @@
 package com.bylak.android.motion.recognize;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.bylak.android.normalize.DefaultInputProcessor;
 import com.bylak.android.normalize.InputProcessor;
 import com.bylak.network.neural.NeuralNetwork;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,14 +24,14 @@ public final class NeuralNetworkSimulator {
     }
 
     public Map<MotionType, Double[]> invokeAll(final float[] data) {
-        Map<MotionType, Double[]> simulationResult = new HashMap<>();
-        for (Map.Entry<MotionType, NeuralNetwork> entry : networks.entrySet()) {
-            MotionType key = entry.getKey();
-            NeuralNetwork network = entry.getValue();
-            int networkInputCount = network.getInputCount();
+        final Map<MotionType, Double[]> simulationResult = new HashMap<>();
+        for (final Map.Entry<MotionType, NeuralNetwork> entry : networks.entrySet()) {
+            final MotionType key = entry.getKey();
+            final NeuralNetwork network = entry.getValue();
+            final int networkInputCount = network.getInputCount();
 
-            double[] processedData = processInputData(data, networkInputCount);
-            double[] output = simulate(network, processedData);
+            final double[] processedData = processInputData(data, networkInputCount);
+            final double[] output = simulate(network, processedData);
 
             simulationResult.put(key, convert(output));
         }
@@ -39,19 +39,19 @@ public final class NeuralNetworkSimulator {
         return simulationResult;
     }
 
-    private double[] processInputData(float[] data, int networkInputCount) {
+    private double[] processInputData(final float[] data, final int networkInputCount) {
         return inputProcessor.processInput(networkInputCount, data);
     }
 
-    private double[] simulate(NeuralNetwork network, double[] processedData) {
+    private double[] simulate(final NeuralNetwork network, final double[] processedData) {
         network.setInputs(processedData);
         network.simulate();
 
         return network.getOutput();
     }
 
-    private Double[] convert(double[] values) {
-        Double[] newObject = new Double[values.length];
+    private Double[] convert(final double[] values) {
+        final Double[] newObject = new Double[values.length];
 
         for (int i = 0; i < values.length; i++) {
             newObject[i] = new Double(values[i]);

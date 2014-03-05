@@ -11,7 +11,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public final class AggregatedException extends Exception {
-    private List<Exception> exceptions;
+    private final List<Exception> exceptions;
 
     public AggregatedException(final List<Exception> exceptions) {
         this.exceptions = exceptions;
@@ -22,13 +22,13 @@ public final class AggregatedException extends Exception {
     }
 
     public static final class Builder {
-        private List<Exception> exceptions;
+        private final List<Exception> exceptions;
 
         public Builder() {
             this.exceptions = new ArrayList<Exception>();
         }
 
-        public Builder add(Exception ex) {
+        public Builder add(final Exception ex) {
             this.exceptions.add(ex);
             return this;
         }

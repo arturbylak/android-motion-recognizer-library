@@ -7,12 +7,12 @@ public final class TestActivationFunction implements ActivationFunction {
     }
 
     @Override
-    public double value(double xValue) {
+    public double value(final double xValue) {
         return xValue;
     }
 
     @Override
-    public double derivativeValue(double xValue) {
+    public double derivativeValue(final double xValue) {
         return 1;
     }
 }

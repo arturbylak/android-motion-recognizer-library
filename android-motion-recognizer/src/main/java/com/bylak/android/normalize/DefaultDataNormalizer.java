@@ -9,14 +9,14 @@ package com.bylak.android.normalize;
  */
 public final class DefaultDataNormalizer implements DataNormalizer {
     @Override
-    public double[] normalizeData(final float[] dataToNormalize){
-        int length = dataToNormalize.length;
+    public double[] normalizeData(final float[] dataToNormalize) {
+        final int length = dataToNormalize.length;
 
         double min = dataToNormalize[0];
         double max = dataToNormalize[0];
 
         for (int i = 0; i < length; i++) {
-            double currentValue = dataToNormalize[i];
+            final double currentValue = dataToNormalize[i];
 
             if (currentValue > max) {
                 max = currentValue;
@@ -29,13 +29,13 @@ public final class DefaultDataNormalizer implements DataNormalizer {
         return normalize(max, min, dataToNormalize);
     }
 
-    private double[] normalize(double max, double min, float[] dataToNormalize) {
-        int length = dataToNormalize.length;
-        double[] normalizedData = new double[length];
-        double diff = (max - min);
+    private double[] normalize(final double max, final double min, final float[] dataToNormalize) {
+        final int length = dataToNormalize.length;
+        final double[] normalizedData = new double[length];
+        final double diff = max - min;
 
         for (int i = 0; i < length; i++) {
-            double currentValue = dataToNormalize[i];
+            final double currentValue = dataToNormalize[i];
 
             normalizedData[i] = (currentValue - min) / diff;
         }

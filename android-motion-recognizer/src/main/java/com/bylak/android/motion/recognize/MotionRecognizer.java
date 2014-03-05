@@ -1,12 +1,13 @@
 package com.bylak.android.motion.recognize;
 
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
-import com.bylak.network.neural.NeuralNetwork;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+
+import com.bylak.android.motion.recognize.listener.OnRecognizedListener;
+import com.bylak.network.neural.NeuralNetwork;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +22,8 @@ public final class MotionRecognizer {
     private final MotionProcessor motionProcessor;
     private final Sensor selectedSensor;
 
-    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final SensorManager sensorManager, final OnRecognizedListener onRecognizedListener, double thresholdValue) {
+    private MotionRecognizer(final Map<MotionType, NeuralNetwork> networks, final SensorManager sensorManager,
+            final OnRecognizedListener onRecognizedListener, final double thresholdValue) {
         this.networks = networks;
         this.sensorManager = sensorManager;
 

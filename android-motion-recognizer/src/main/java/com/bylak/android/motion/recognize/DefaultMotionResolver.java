@@ -12,25 +12,25 @@ import java.util.Map;
 public final class DefaultMotionResolver implements MotionResolver {
     private final double threshold;
 
-    public DefaultMotionResolver(double threshold) {
+    public DefaultMotionResolver(final double threshold) {
         this.threshold = threshold;
     }
 
     @Override
     public MotionType resolve(final Map<MotionType, Double[]> simulationOutput) {
 
-        if(simulationOutput==null){
+        if (simulationOutput == null) {
             throw new IllegalArgumentException("Simulation output cant be null");
         }
 
         MotionType motionType = new MotionType(MotionType.UNKNOWN, "");
         double biggestValue = 0;
 
-        for (Map.Entry<MotionType, Double[]> entry : simulationOutput.entrySet()) {
-            MotionType key = entry.getKey();
-            Double[] networkOutputs = entry.getValue();
+        for (final Map.Entry<MotionType, Double[]> entry : simulationOutput.entrySet()) {
+            final MotionType key = entry.getKey();
+            final Double[] networkOutputs = entry.getValue();
 
-            double output = sum(networkOutputs);
+            final double output = sum(networkOutputs);
 
             if (biggestValue < output && output > threshold) {
                 motionType = key;
@@ -43,7 +43,7 @@ public final class DefaultMotionResolver implements MotionResolver {
 
     private double sum(final Double[] values) {
         double sum = 0;
-        for (Double value : values) {
+        for (final Double value : values) {
             sum += value;
         }
 

@@ -15,12 +15,12 @@ public final class InitHelper {
     private InitHelper() {
     }
 
-    public static void checkNullValues(Object... objects) throws AggregatedException {
-        AggregatedException.Builder exceptionBuilder = new AggregatedException.Builder();
+    public static void checkNullValues(final Object... objects) throws AggregatedException {
+        final AggregatedException.Builder exceptionBuilder = new AggregatedException.Builder();
 
-        for (Object object : objects) {
+        for (final Object object : objects) {
             if (object == null) {
-                String message = String.format(ERROR_MESSAGE, "test");
+                final String message = String.format(ERROR_MESSAGE, "test");
                 exceptionBuilder.add(new IllegalArgumentException(message));
             }
         }

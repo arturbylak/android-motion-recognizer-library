@@ -1,7 +1,8 @@
 package com.bylak.network.neural;
 
-import com.bylak.network.function.ActivationFunction;
 import org.apache.commons.math.linear.RealMatrix;
+
+import com.bylak.network.function.ActivationFunction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,14 +11,13 @@ import org.apache.commons.math.linear.RealMatrix;
  * Time: 12:26
  * To change this template use File | Settings | File Templates.
  */
-public final class Bias implements Neuron{
+public final class Bias implements Neuron {
 
     private final ActivationFunction activationFunction;
     private static final int BIAS_VALUE = 1;
 
-
-    private Bias(final ActivationFunction activationFunction){
-         this.activationFunction = activationFunction;
+    private Bias(final ActivationFunction activationFunction) {
+        this.activationFunction = activationFunction;
     }
 
     @Override
@@ -26,11 +26,11 @@ public final class Bias implements Neuron{
     }
 
     @Override
-    public void simulate(RealMatrix inputs) {
+    public void simulate(final RealMatrix inputs) {
     }
 
     @Override
-    public void setValue(double newValue) {
+    public void setValue(final double newValue) {
         throw new UnsupportedOperationException();
     }
 
@@ -40,15 +40,15 @@ public final class Bias implements Neuron{
     }
 
     @Override
-    public double getWag(int index) {
-       return 0;
+    public double getWag(final int index) {
+        return 0;
     }
 
     @Override
-    public void setWag(int index, double value) {
+    public void setWag(final int index, final double value) {
     }
 
-    public static Neuron createBias(final ActivationFunction activationFunction){
+    public static Neuron createBias(final ActivationFunction activationFunction) {
         return new Bias(activationFunction);
     }
 }

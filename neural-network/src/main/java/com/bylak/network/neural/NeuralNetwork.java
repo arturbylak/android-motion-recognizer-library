@@ -1,15 +1,15 @@
 package com.bylak.network.neural;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bylak.network.layer.DefaultLayerExecutor;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.layer.LayerExecutor;
-import com.bylak.network.neural.teach.OneOutputBackPropagationAlgorithm;
 import com.bylak.network.neural.teach.EpochData;
 import com.bylak.network.neural.teach.NeutralNetworkTeachingAlgorithm;
+import com.bylak.network.neural.teach.OneOutputBackPropagationAlgorithm;
 import com.bylak.network.neural.teach.TeachConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,8 +21,8 @@ import java.util.List;
 public final class NeuralNetwork {
     private final List<Layer> layers;
     private double[] output;
-    private LayerExecutor layerExecutor;
-    private NeutralNetworkTeachingAlgorithm teachingAlgorithm;
+    private final LayerExecutor layerExecutor;
+    private final NeutralNetworkTeachingAlgorithm teachingAlgorithm;
 
     public NeuralNetwork() {
         this.layers = new ArrayList<Layer>();
@@ -52,26 +52,26 @@ public final class NeuralNetwork {
         return this.layers.size();
     }
 
-    public Layer getLayer(int index) {
+    public Layer getLayer(final int index) {
         return this.layers.get(index);
     }
 
-    public void setInputs(double[] values) {
-        Layer inputLayer = getLayer(0);
+    public void setInputs(final double[] values) {
+        final Layer inputLayer = getLayer(0);
         for (int i = 0; i < getNeuronCountWithoutBias(); i++) {
-            Neuron inputNeuron = inputLayer.getNeuron(i);
-            double input = values[i];
+            final Neuron inputNeuron = inputLayer.getNeuron(i);
+            final double input = values[i];
             inputNeuron.setValue(input);
         }
     }
 
-    private int getNeuronCountWithoutBias(){
-        Layer inputLayer = getLayer(0);
+    private int getNeuronCountWithoutBias() {
+        final Layer inputLayer = getLayer(0);
         return inputLayer.getNeuronsCount() - 1;
     }
 
     public int getInputCount() {
-        Layer inputLayer = getLayer(0);
+        final Layer inputLayer = getLayer(0);
 
         return inputLayer.getNeuronsCount();
     }

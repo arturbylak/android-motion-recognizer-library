@@ -1,9 +1,10 @@
 package com.bylak.network.layer;
 
-import com.bylak.network.neural.Neuron;
+import java.util.List;
+
 import org.apache.commons.math.linear.RealMatrix;
 
-import java.util.List;
+import com.bylak.network.neural.Neuron;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,12 +15,12 @@ import java.util.List;
  */
 public final class PerceptionLayerProcessor implements LayerProcessor {
     @Override
-    public void processLayer(Layer firstLayer, Layer secondLayer) {
-        RealMatrix currentValues = firstLayer.createNeuronsValuesMatrix();
-        List<Neuron> neurons = secondLayer.getNeurons();
+    public void processLayer(final Layer firstLayer, final Layer secondLayer) {
+        final RealMatrix currentValues = firstLayer.createNeuronsValuesMatrix();
+        final List<Neuron> neurons = secondLayer.getNeurons();
 
         for (int i = 0; i < secondLayer.getNeuronsCount(); i++) {
-            Neuron neuron = neurons.get(i);
+            final Neuron neuron = neurons.get(i);
             neuron.simulate(currentValues.transpose());
         }
     }

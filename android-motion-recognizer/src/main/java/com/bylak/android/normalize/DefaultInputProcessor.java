@@ -18,7 +18,7 @@ public final class DefaultInputProcessor implements InputProcessor {
     }
 
     @Override
-    public double[] processInput(int expectedOutputCount, float[] dataToProcess) {
+    public double[] processInput(final int expectedOutputCount, final float[] dataToProcess) {
 
         if (expectedOutputCount < 0) {
             throw new IllegalArgumentException("Expected count should be positive");
@@ -28,16 +28,16 @@ public final class DefaultInputProcessor implements InputProcessor {
             throw new IllegalArgumentException("Incorrect data to process");
         }
 
-        double[] normalizedData = normalize(dataToProcess);
+        final double[] normalizedData = normalize(dataToProcess);
 
         return changeSize(normalizedData, expectedOutputCount);
     }
 
-    private double[] normalize(float[] dataToProcess) {
+    private double[] normalize(final float[] dataToProcess) {
         return dataNormalizer.normalizeData(dataToProcess);
     }
 
-    private double[] changeSize(double[] dataToProcess, int expectedOutputCount) {
+    private double[] changeSize(final double[] dataToProcess, final int expectedOutputCount) {
         return dataSizeChanger.changeSize(dataToProcess, expectedOutputCount);
     }
 }
