@@ -1,14 +1,17 @@
 package com.bylak.network.neural;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.bylak.network.function.ActivationFunction;
 import com.bylak.network.function.SigmoidActivationFunction;
 import com.bylak.network.layer.Layer;
 import com.bylak.network.neural.teach.EpochData;
 import com.bylak.network.neural.teach.TeachConfiguration;
 import com.bylak.network.neural.teach.TeachData;
+import org.hamcrest.number.IsCloseTo;
+import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.lessThan;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,13 +52,27 @@ public class NeuralNetworkTest {
                 .build();
         zero3 = new EpochData.Builder()
                 .add(new TeachData(new double[] { 1, 0 }, new double[] { 0 }))
-
                 .build();
     }
 
     @Test
-    public void testSimulate() throws Exception {
+    public void shouldReturnCorrectValue() {
         // given
+        final NeuralNetwork neuralNetwork = buildStandardNeutralNetwork();
+
+        final int expectedLength = 1;
+        final double expectedValue = 16.0;
+
+        // when
+        neuralNetwork.simulate();
+
+        // then
+        final double[] simulateResult = neuralNetwork.getOutput();
+        assertThat(simulateResult.length, equalTo(expectedLength));
+        assertThat(simulateResult[0], IsCloseTo.closeTo(expectedValue, 0.1));
+    }
+
+    private NeuralNetwork buildStandardNeutralNetwork() {
         final NeuralNetwork neuralNetwork = new NeuralNetwork();
         final TestActivationFunction activationFunction = new TestActivationFunction();
 
@@ -77,90 +94,75 @@ public class NeuralNetworkTest {
         neuralNetwork.addLayer(hiddenLayer);
         neuralNetwork.addLayer(outputLayer);
 
-        final int expectedLength = 1;
-        final int expectedValue = 16;
-
-        // when
-        neuralNetwork.simulate();
-        final double[] simulateResult = neuralNetwork.getOutput();
-
-        // then
-        Assert.assertTrue(simulateResult.length == expectedLength);
-        Assert.assertTrue(simulateResult[0] == expectedValue);
+        return neuralNetwork;
     }
 
     @Test
-    public void testXor() {
+    public void shouldReturnCorrectXOROperationValues() {
         // given
         final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
-
-        final TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
+        final TeachConfiguration teachConfiguration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
         // when
-        neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
+        neuralNetwork.teach(XOR_EPOCH_DATA, teachConfiguration);
 
         // then
-        double output = simulate(neuralNetwork, new double[] { 0, 0 });
-        Assert.assertEquals(0, output, 0.1d);
+        assertEqualResponse(neuralNetwork, XOR_EPOCH_DATA);
+    }
 
-        output = simulate(neuralNetwork, new double[] { 0, 1 });
-        Assert.assertEquals(1, output, 0.1d);
+    private void assertEqualResponse(final NeuralNetwork neuralNetwork, final EpochData epochData){
+        for(int i=0; i<epochData.getSize(); i++){
+            final TeachData singleEpochData = epochData.getElement(i);
+            final double[] input = singleEpochData.getInput();
+            final double expectedOutput = singleEpochData.getExpectedOutput()[0];
+            final double actualOutput = simulate(neuralNetwork, input);
 
-        output = simulate(neuralNetwork, new double[] { 1, 0 });
-        Assert.assertEquals(1, output, 0.1d);
-
-        output = simulate(neuralNetwork, new double[] { 1, 1 });
-        Assert.assertEquals(0, output, 0.1d);
+            assertThat(actualOutput, IsCloseTo.closeTo(actualOutput, 0.1));
+        }
     }
 
     @Test
-    public void testOR() {
+    public void shouldReturnCorrectOROperationValues() {
         // given
         final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
-
         final TeachConfiguration configuration = new TeachConfiguration(0.01d, 40000000, 1d, 0.7d);
 
         // when
         neuralNetwork.teach(OR_EPOCH_DATA, configuration);
 
         // then
-        double output = simulate(neuralNetwork, new double[] { 0, 0 });
-        Assert.assertEquals(0, output, 0.1d);
-
-        output = simulate(neuralNetwork, new double[] { 0, 1 });
-        Assert.assertEquals(1, output, 0.1d);
-
-        output = simulate(neuralNetwork, new double[] { 1, 0 });
-        Assert.assertEquals(1, output, 0.1d);
-
-        output = simulate(neuralNetwork, new double[] { 1, 1 });
-        Assert.assertEquals(1, output, 0.1d);
+        assertEqualResponse(neuralNetwork, OR_EPOCH_DATA);
     }
 
     @Test
-    public void testSSE() {
+    public void shouldReturnSSELessThen() {
         // given
         final NeuralNetwork neuralNetwork = getXORNeuralNetwork();
         final double maxErrorValue = 0.2d;
         final TeachConfiguration configuration = new TeachConfiguration(maxErrorValue, 4000000, 1, 0.7d);
-        double errorSum = 0;
 
         // when
         neuralNetwork.teach(XOR_EPOCH_DATA, configuration);
-        double output = simulate(neuralNetwork, new double[] { 0, 0 });
-        errorSum = +output - 0;
 
-        output = simulate(neuralNetwork, new double[] { 0, 1 });
-        errorSum = +output - 1;
-
-        output = simulate(neuralNetwork, new double[] { 1, 0 });
-        errorSum = +output - 1;
-
-        output = simulate(neuralNetwork, new double[] { 1, 1 });
-        errorSum = +output - 0;
+        //then
+        final double errorSum = calculateError(neuralNetwork, XOR_EPOCH_DATA);
 
         // then
-        Assert.assertTrue(errorSum < maxErrorValue);
+        assertThat(errorSum, lessThan(maxErrorValue));
+    }
+
+    private double calculateError(final NeuralNetwork neuralNetwork, final EpochData epochData){
+        double errorSum = 0;
+        for(int i=0; i<epochData.getSize(); i++){
+            final TeachData singleEpochData = epochData.getElement(i);
+            final double[] input = singleEpochData.getInput();
+            final double expectedOutput = singleEpochData.getExpectedOutput()[0];
+            final double actualOutput = simulate(neuralNetwork, input);
+
+            errorSum += actualOutput - expectedOutput;
+        }
+
+        return errorSum;
     }
 
     private NeuralNetwork getXORNeuralNetwork() {
@@ -200,5 +202,4 @@ public class NeuralNetworkTest {
 
         return output[0];
     }
-
 }

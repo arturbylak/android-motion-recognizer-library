@@ -30,14 +30,14 @@ public class DefaultLayerExecutorTest {
         final Layer hiddenLayer = PowerMockito.mock(Layer.class);
         final Layer outputLayer = PowerMockito.mock(Layer.class);
 
-        final List<Layer> layers = new ArrayListBuilder<Layer>()
+        final List<Layer> neuronLayers = new ArrayListBuilder<Layer>()
                 .add(inputLayer)
                 .add(hiddenLayer)
                 .add(outputLayer)
                 .build();
 
         // when
-        layerExecutor.execute(layers);
+        layerExecutor.execute(neuronLayers);
 
         // then
         Mockito.verify(hiddenLayer).processLayer(inputLayer);
