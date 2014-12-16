@@ -1,15 +1,13 @@
 package com.bylak.network.layer;
 
+import com.bylak.network.util.ArrayListBuilder;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.bylak.network.util.ArrayListBuilder;
 
 /**
  * Created with IntelliJ IDEA.
