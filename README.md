@@ -1,6 +1,6 @@
 android-motion-recognizer-library
 =================================
 
-Library for motion recognition phone. The library uses a neural network to detect movements
+The library uses a neural network to detect the movements of a mobile phone.
 
 Autor: Artur Bylak
